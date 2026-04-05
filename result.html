@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>採集結果 - 舊城時光色譜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- 滿版模糊打底背景 -->
+    <div class="app-container" style="background-image: url('./assets/images/色譜-好伴社計藍.png'); background-repeat: repeat; position: relative;">
+        <!-- 高斯模糊與疊加層 -->
+        <div style="position: absolute; top:0; left:0; width:100%; height:100%; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(255,255,255,0.45); z-index: 1;"></div>
+
+        <!-- 內容主體區 -->
+        <div style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; overflow-y: auto;">
+            
+            <!-- 頂部與首頁共通的玻璃導覽列 -->
+            <header class="detail-header glass-effect" style="margin-bottom: 0;">
+                <button class="nav-btn glass-effect" onclick="window.location.href='index.html'" aria-label="回首頁">
+                    <img src="./assets/icons/home.svg" alt="Home">
+                </button>
+                <div class="header-titles">
+                    <h1 class="store-name">好伴社計藍</h1>
+                    <div class="body-12-18">TC-2026-03-24-01</div>
+                </div>
+                <div style="width:60px;"></div> <!-- 保留右側空白以維持對稱置中 -->
+            </header>
+
+            <div class="body-16-24" style="text-align: center; font-weight: 700; padding: 12px 0;">
+                標本採集完成
+            </div>
+            
+            <!-- 上側銳利橫條紋間隔 -->
+            <div style="height: 36px; background-image: url('./assets/images/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: top; opacity: 0.9;"></div>
+
+            <!-- 照片展示與按鈕組 -->
+            <div style="flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 24px 48px 24px 32px;">
+                <!-- 照片卡 -->
+                <div style="width: 100%; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    
+                    <!-- 頂端浮水印色板文字 -->
+                    <div style="background: rgba(255,255,255,0.6); display: flex; font-size: 10px; padding: 4px 8px; justify-content: space-between; position: absolute; top: 0; left: 0; width: 100%; z-index: 10; font-family: 'Noto Sans TC', sans-serif;">
+                        <span>好伴社計藍</span>
+                        <span>TC-2026-03-24-01</span>
+                    </div>
+
+                    <!-- 影像本體 (利用 JS 模擬直式與橫式載入，並加上 crossorigin 協助 Canvas 合成) -->
+                    <img id="result-photo" crossorigin="anonymous" src="https://images.unsplash.com/photo-1541414779316-d565ddfae155?q=80&w=800&auto=format&fit=crop" style="width: 100%; display: block;" alt="Photograph">
+
+                    <!-- 照片下方的圖騰疊加邊界 -->
+                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background-image: url('./assets/images/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; z-index: 10;"></div>
+
+                    <!-- 右側垂直懸浮按鈕列 -->
+                    <div style="position: absolute; right: -30px; bottom: 10px; display: flex; flex-direction: column; gap: 12px; z-index: 20;">
+                        <!-- 返回上一頁(退回) -->
+                        <button class="nav-btn glass-effect" onclick="window.history.back()">
+                            <img src="./assets/icons/back.svg" alt="Back">
+                        </button>
+                        <!-- 前往相機(重新拍照) -->
+                        <button class="nav-btn glass-effect" onclick="window.location.href='camera.html'">
+                            <img src="./assets/icons/camera.svg" alt="Retake Photo">
+                        </button>
+                        <!-- 下載合成照片 -->
+                        <button class="nav-btn glass-effect" onclick="downloadCompositePhoto()">
+                            <img src="./assets/icons/download.svg" alt="Download">
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 下側銳利橫條紋間隔 -->
+            <div style="height: 36px; background-image: url('./assets/images/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; opacity: 0.9;"></div>
+
+            <!-- 顏色自動萃取分析列表 -->
+            <div id="extracted-colors" style="padding: 24px 32px; display: flex; flex-direction: column; gap: 16px;">
+                <!-- 這些顏色將由 JS 根據照片自動切換對應色系 -->
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 標本下載完成訊息視窗 -->
+    <div id="download-toast" class="toast-overlay hidden" onclick="this.classList.add('hidden')" style="z-index: 100;">
+        <div style="background: #999; border-radius: 12px; padding: 12px 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <span class="body-16-24" style="color: #111; font-weight: 500;">標本已下載</span>
+        </div>
+    </div>
+
+    <!-- 為了展示您的雙版本橫直向需求，我設計了一個簡單的切換腳本 -->
+    <script>
+        const portraitData = {
+            image: "https://images.unsplash.com/photo-1541414779316-d565ddfae155?q=80&w=800&auto=format&fit=crop", // 直排蜥蜴示意圖
+            colors: [
+                { hex: "E3E5CE", rgb: "227 229 206", bg: "#E3E5CE" },
+                { hex: "550804", rgb: "85 8 4", bg: "#550804" },
+                { hex: "A9B4B5", rgb: "169 180 181", bg: "#A9B4B5" }
+            ]
+        };
+
+        const landscapeData = {
+            image: "https://images.unsplash.com/photo-1504448574169-be5a57008e31?q=80&w=800&auto=format&fit=crop", // 橫向蜥蜴示意圖
+            colors: [
+                { hex: "CA7D45", rgb: "202 125 69", bg: "#CA7D45" },
+                { hex: "815344", rgb: "129 83 68", bg: "#815344" },
+                { hex: "30596F", rgb: "48 89 111", bg: "#30596F" }
+            ]
+        };
+
+        function renderResult(data) {
+            document.getElementById('result-photo').src = data.image;
+            
+            const colorContainer = document.getElementById('extracted-colors');
+            colorContainer.innerHTML = ''; // 清空
+
+            data.colors.forEach(col => {
+                const block = document.createElement('div');
+                block.className = 'color-spec';
+                block.style = 'display: flex; gap: 20px; align-items: center;';
+                block.innerHTML = `
+                    <div style="width: 48px; height: 48px; background-color: ${col.bg}; flex-shrink:0;"></div>
+                    <div class="body-12-18" style="display: flex; flex: 1; align-items: center;">
+                        <span style="flex:1">Hex &nbsp; ${col.hex}</span>
+                        <span style="flex:1">RGB &nbsp; ${col.rgb}</span>
+                    </div>
+                `;
+                colorContainer.appendChild(block);
+            });
+        }
+
+        // 隨機抽選直向或橫向作為畫面載入展示
+        if(Math.random() > 0.5){
+            renderResult(portraitData);
+        } else {
+            renderResult(landscapeData);
+        }
+
+        // 您可以在畫面上點擊最上面的「標本採集完成」字樣手動切換直/橫向版本測試
+        let isPortrait = true;
+        document.querySelector('.body-16-24').addEventListener('click', () => {
+            isPortrait = !isPortrait;
+            renderResult(isPortrait ? portraitData : landscapeData);
+        });
+
+        // 執行 Canvas 合成下載與觸發 Toast
+        function downloadCompositePhoto() {
+            // 秀出「標本已下載」 Toast
+            const toast = document.getElementById('download-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+
+            // 準備 Canvas
+            const canvas = document.createElement('canvas');
+            const img = document.getElementById('result-photo');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            
+            if (canvas.width === 0) return; // 圖片尚未載入防呆
+
+            // 1. 繪製底部相片
+            ctx.drawImage(img, 0, 0);
+
+            // 2. 繪製頂部微透明浮水印帶
+            const topBarHeight = canvas.width * 0.08; 
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.fillRect(0, 0, canvas.width, topBarHeight);
+            
+            ctx.fillStyle = '#111';
+            const fontSize = topBarHeight * 0.45;
+            ctx.font = `${fontSize}px "Noto Sans TC", sans-serif`;
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'left';
+            ctx.fillText('好伴社計藍', 20, topBarHeight / 2);
+            ctx.textAlign = 'right';
+            ctx.fillText('TC-2026-03-24-01', canvas.width - 20, topBarHeight / 2);
+
+            // 3. 非同步繪製底部藍色圖騰並啟動下載
+            const patternImg = new Image();
+            patternImg.src = './assets/images/色譜-好伴社計藍.png';
+            patternImg.onload = () => {
+                const bottomBarHeight = canvas.width * 0.15;
+                const ptrn = ctx.createPattern(patternImg, 'repeat');
+                ctx.fillStyle = ptrn;
+                ctx.translate(0, canvas.height - bottomBarHeight);
+                ctx.fillRect(0, 0, canvas.width, bottomBarHeight);
+                executeDownload();
+            };
+            patternImg.onerror = () => executeDownload(); // 若圖片遺失則不畫圖騰直接下載
+
+            function executeDownload() {
+                try {
+                    const link = document.createElement('a');
+                    link.download = '光陰色譜標本_TC-2026-03-24-01.jpg';
+                    link.href = canvas.toDataURL('image/jpeg', 0.9);
+                    link.click();
+                } catch (e) {
+                    console.error("因為 Unsplash 跨域限制，無法執行二進位下載", e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

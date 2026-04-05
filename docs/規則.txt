@@ -1,0 +1,16 @@
+規則  rule
+
+# Language & Communication
+- Always respond in Traditional Chinese (Taiwan).
+- Use professional technical terminology (e.g., 使用者介面, 伺服器, 實作).
+- If English documentation is provided, explain core concepts in Traditional Chinese.
+
+# Security & Permissions (CRITICAL)
+- Strictly prohibited from suggesting or executing commands that modify system-level files or environment variables outside the current project directory.
+- Never use 'sudo' or administrative privileges unless explicitly requested for a specific localized task.
+- Do not attempt to modify any files in the user's root directory or system folders.
+
+- Prioritize code readability and follow the structure defined in README.md.
+- When generating UI code, ensure it matches the uploaded Figma screenshots' aesthetics (colors, spacing).
+
+- Add concise comments in Traditional Chinese for complex logic.

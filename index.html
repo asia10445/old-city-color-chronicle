@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>舊城時光色譜</title>
+    <!-- 引入字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 頂部 Header 導覽列也套用玻璃陰影 -->
+        <header class="app-header glass-effect">
+            <h1 class="title-32-48">舊城時光色譜</h1>
+        </header>
+
+        <!-- 瀑布流主內容容器 (拆分為左右雙欄) -->
+        <main class="masonry-container" id="masonry-container">
+            <div class="masonry-col" id="masonry-col-left"></div>
+            <div class="masonry-col" id="masonry-col-right"></div>
+        </main>
+
+        <!-- 右側浮動導覽列 -->
+        <nav class="floating-nav">
+            <button class="nav-btn glass-effect" aria-label="詳細資訊">
+                <img src="./assets/icons/info.svg" alt="Info">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="新增" onclick="document.getElementById('add-modal').classList.remove('hidden')">
+                <img src="./assets/icons/add.svg" alt="Add">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="搜尋" onclick="document.getElementById('search-modal').classList.remove('hidden'); setTimeout(()=>document.getElementById('search-input-field').focus(), 100);">
+                <img src="./assets/icons/search.svg" alt="Search">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="地圖" onclick="window.location.href='map.html'">
+                <img src="./assets/icons/location.svg" alt="Location">
+            </button>
+        </nav>
+
+        <!-- 資訊說明模態視窗 (預設隱藏) -->
+        <div id="info-modal" class="modal-overlay hidden">
+            <!-- 面板無色，直接套用玻璃陰影 -->
+            <div class="modal-panel glass-effect">
+                <h2 class="store-name" style="text-align:center; margin-bottom: 24px;">關於舊城時光色譜</h2>
+                <div class="body-12-18" style="display: flex; flex-direction: column; gap: 16px;">
+                    <p style="font-weight:700;">「時光的顏色，是有觸感的。」</p>
+                    <p>我們走進舊城老舖，記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。</p>
+                    <div style="line-height:1.6;">
+                        <p>圖騰組成邏輯</p>
+                        <p>核心紋理 | 材料的肌理流動</p>
+                        <p>幾何節奏 | 空間的排列秩序</p>
+                        <p>歲月斑駁 | 時間的使用痕跡</p>
+                    </div>
+                    <div style="line-height:1.6;">
+                        <p>採集單位：好伴社計</p>
+                        <p>更新日期：2026.04.07</p>
+                        <p>地點：舊城區時光標本庫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增分享店家表單視窗 -->
+        <div id="add-modal" class="modal-overlay hidden" style="z-index: 100; padding: 0;">
+            
+            <!-- 獨立抽出的絕對浮動返回按鈕，避免被滿版濾鏡層綁架滾動 -->
+            <button class="nav-btn glass-effect modal-close-btn" onclick="document.getElementById('add-modal').classList.add('hidden')">
+                <img src="./assets/icons/back.svg" alt="Close">
+            </button>
+
+            <!-- 將面板擴充為滿版捲動區 -->
+            <div class="modal-panel glass-effect full-modal-scroll">
+                <div class="share-form">
+                    <h2 class="form-main-title">分享一間你喜歡的舊城店家</h2>
+                    
+                    <div class="body-12-18 form-subtitle">
+                        <p style="font-weight: 700; margin-bottom: 8px;">我們正在蒐集那些值得被記住的地方</p>
+                        <p>不用登入，也可以匿名投稿，你的分享，可能會變成下一張舊城的色譜。</p>
+                    </div>
+
+                    <h3 class="form-section-title">店家基本資訊</h3>
+                    
+                    <div class="form-group form-row">
+                        <label>店家名稱</label>
+                        <input type="text" placeholder="店家名稱 例如：好伴社計">
+                    </div>
+                    
+                    <div class="form-group form-row">
+                        <label>店家地點</label>
+                        <input type="text" placeholder="店家地點 例如：綠川附近">
+                    </div>
+
+                    <div class="form-group">
+                        <label>為什麼想分享這間店？</label>
+                        <textarea rows="3" placeholder="例如：門口的磨石子地板很漂亮&#10;或：這家店的招牌很有味道"></textarea>
+                    </div>
+
+                    <button class="form-upload-btn">上傳照片</button>
+
+                    <h3 class="form-section-title" style="margin-top: 32px;">提供者資訊</h3>
+
+                    <div class="form-group form-row">
+                        <label>你的名字</label>
+                        <input type="text" placeholder="例如：匿名旅人">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="margin-bottom:8px;">聯絡方式</label>
+                        <input type="text" placeholder="Email 或 IG（如果願意讓我們聯絡你）">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="margin-bottom:8px;">其他補充說明</label>
+                        <textarea rows="2" placeholder="若有訪談內容或詳細的職人故事，請在這裡輸入。"></textarea>
+                    </div>
+
+                    <h3 class="form-section-title" style="margin-top: 32px;">同意使用條款</h3>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="terms-agree" onchange="document.getElementById('share-submit-btn').disabled = !this.checked; document.getElementById('share-submit-btn').style.opacity = this.checked ? '1' : '0.4';">
+                        <label for="terms-agree" class="body-12-18" style="font-weight: 400; line-height: 1.5;">我同意本照片與資料可用於《舊城時光色譜》之研究、展示與設計用途。</label>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 32px;">
+                        <button id="share-submit-btn" class="form-submit-btn glass-effect" disabled style="opacity: 0.4; transition: opacity 0.3s;" onclick="submitShareForm()">分享這間店</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 謝謝分享成功跳出視窗 (面板無色 套陰影) -->
+        <div id="success-modal" class="modal-overlay hidden" style="z-index: 200;" onclick="this.classList.add('hidden')">
+            <!-- 點擊外圍關閉，且面板直接套玻璃擬態透明與陰影 -->
+            <div class="modal-panel glass-effect" style="max-width: 340px; padding: 40px 32px; text-align: center; border-radius: var(--radius-15);" onclick="event.stopPropagation()">
+                <h2 style="font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #111;">謝謝您的分享！</h2>
+                <div class="body-16-24" style="color: #111; text-align: justify; text-align-last: center;">
+                    這間店已加入我們的口袋名單，未來可能會成為一張屬於舊城的色譜。
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜尋器浮動視窗 -->
+        <div id="search-modal" class="modal-overlay hidden" style="z-index: 200;" onclick="this.classList.add('hidden')">
+            <!-- 雙層物件陰影: 外層 Wrapper -->
+            <div class="glass-effect" style="border-radius: var(--radius-15); padding: 12px; width: 85%; max-width: 360px; display: flex; align-items: center; background: transparent;" onclick="event.stopPropagation()">
+                <!-- 雙層物件陰影: 內層 Input -->
+                <input id="search-input-field" type="text" class="glass-effect" placeholder="搜尋色譜或店家名稱..." style="width: 100%; border: none; outline: none; border-radius: 34px; padding: 16px 24px; font-family: 'Noto Sans TC', sans-serif; font-size: 16px; color: #111; background: transparent;">
+            </div>
+        </div>
+    </div>
+    
+    <script src="./js/main.js"></script>
+    <script>
+        // 送出分享表單的連動邏輯
+        function submitShareForm() {
+            // 由於按鈕已經做了 onchange 禁用邏輯，這邊加強二次防呆
+            if (!document.getElementById('terms-agree').checked) return;
+
+            // 1. 關閉底層的分享表單模態框
+            document.getElementById('add-modal').classList.add('hidden');
+            
+            // 2. 開啟無色套陰影的成功視窗
+            document.getElementById('success-modal').classList.remove('hidden');
+
+            // 3. 視窗預設3秒後自動關閉，使用者也可以手動點選背景關閉
+            setTimeout(() => {
+                document.getElementById('success-modal').classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

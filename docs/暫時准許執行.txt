@@ -1,0 +1,28 @@
+在 Terminal 貼上
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+
+在這次的視窗（Process）中，准許執行遠端簽署的腳本。
+一旦關閉了 Cursor 或重開了 Terminal，這個暫時的權限就會消失。
+
+
+
+rm -r -Force node_modules; rm -Force package-lock.json
+
+
+手動執行「禁止動作」 這會繞過 .cursorrules 的 AI 限制
+
+
+qr
+
+npx expo start --clear
+
+
+---
+
+cmd /c "npx expo start"
+
+說明：這會繞過 PowerShell 對 .ps1 檔案的限制，直接啟動 Expo 開發伺服器。
+
+顯示出 Expo Go 的 QR Code 

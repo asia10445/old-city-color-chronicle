@@ -1,0 +1,563 @@
+/* =========================================================================
+ * 舊城時光色譜 - 全域樣式表
+ * ========================================================================= */
+
+:root {
+    /* 色票 */
+    --color-oldcity-black: #1A1A1A;
+    --color-time-white: #FFFFFF;
+
+    /* 圓角 */
+    --radius-12: 12px;
+    --radius-15: 15px;
+
+    /* 間距變數 */
+    --spacing-12: 12px;
+    --spacing-125: 125px;
+    --spacing-150: 150px;
+    --space-icon-btn: var(--spacing-12);
+    --space-nav-home: var(--spacing-125);
+    --space-nav: var(--spacing-150);
+
+    /* 文字語意 (簡化變數供此階段用) */
+    --text-color: var(--color-oldcity-black);
+    --icon-color: var(--color-oldcity-black);
+}
+
+/* Reset & 全域設定 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: #ECECEC; /* 外圍背景，凸顯手機框 */
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 為了方便模擬手機直式螢幕，上下方均等置中 */
+    min-height: 100vh;
+    /* 移除 overflow-x: hidden 確保視窗操作正準 */
+}
+
+/* 響應式主容器 */
+.app-container {
+    width: 393px; /* 鎖定畫布外框為 393 */
+    height: 852px; /* 鎖定畫布外框為 852 */
+    background-color: var(--color-time-white);
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.08); /* 桌面瀏覽時的裝置陰影 */
+    overflow: hidden; /* Clip Content 讓超出範圍直接裁切隱藏 */
+}
+
+/* =========================================================================
+ * Typography 文字樣式
+ * ========================================================================= */
+.title-32-48 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 32px;
+    line-height: 48px;
+    font-weight: 700; /* BOLD */
+}
+
+.store-name {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+/* 內文-12/18 Noto Sans TC Regular 字級12 行距18 */
+.body-12-18 {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+/* 內文-16/24 Noto Sans TC Regular 字級16 行距24 */
+.body-16-24 {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400; /* Regular */
+}
+
+/* =========================================================================
+ * Glassmorphism 玻璃擬態 (嚴格依照變體設定中的陰影進行堆疊)
+ * ========================================================================= */
+.glass-effect {
+    /* Fill / 漸層底色：模擬 FFFFFF 25%, 171717 100%, 8C8C8C 25% 中透光的感覺 */
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(140,140,140,0.25) 100%);
+    
+    /* Background Uniform blur12 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    /* 嚴格按照 Effect 設計：
+       inner shadow x3 y3 blur0.5 spread -3.5 ffffff 100%
+       inner shadow x2 y2 blur0.5 spread -2  262626 100%
+       inner shadow x-2 y-2 blur0.5 spread -2 262626 100%
+       inner shadow x0 y0 blur0 spread1 A6A6A6 100%
+       inner shadow x0 y0 blur8 spread0 f2f2f2 100%
+       drop shadow x0 y0 blur2 spread0 000000 10%
+       drop shadow x0 y1 blur8 spread0  000000 10% */
+    /* 改為無黑線/外框線的版本，保持玻璃輕透感 */
+    box-shadow: 
+        inset 3px 3px 0.5px -3.5px #ffffff,
+        inset 0px 0px 8px 0px #f2f2f2,
+        0px 0px 2px 0px rgba(0,0,0,0.1),
+        0px 1px 8px 0px rgba(0,0,0,0.1);
+}
+
+/* =========================================================================
+ * 頁面佈局與元件
+ * ========================================================================= */
+
+/* 頂部導覽文字區塊 */
+.app-header {
+    position: absolute; /* 利用絕對定位受控於 393x852 的框內，不再受限於螢幕視窗座標 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--space-nav-home);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: none;
+    outline: none;
+}
+
+/* Header 如果加上玻璃效果，因為設計為平貼上方所以取消圓角 */
+.app-header.glass-effect {
+    border-radius: 0;
+}
+
+/* 瀑布流容器 (雙欄 Flexbox) */
+.masonry-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 20px 120px 20px; /* 左、右間距改為 20，頂部由 y20 開始 */
+    height: 100%;
+    overflow-y: auto; /* 讓瀑布流區塊自己負責捲動，保持其餘 UI 固定 */
+}
+
+.masonry-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1; /* 均分左右可用寬度 */
+}
+
+/* 單張色卡 */
+.color-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* 讓名稱區域置底 */
+    position: relative;
+    border: none; /* 確保沒有外框線 */
+    outline: none; /* 確保沒有外框線 */
+}
+
+/* 依照規則設定兩種卡片比例 */
+.color-card.ratio-1-1 {
+    aspect-ratio: 1 / 1;
+}
+
+.color-card.ratio-1-1-5 {
+    aspect-ratio: 1 / 1.5;
+}
+
+/* 卡片內的玻璃框設定（名稱與編號） */
+.color-card .card-caption {
+    width: 100%;
+    padding: 12px;
+    border-radius: 0; /* 配合卡片的直角疊加，維持方正框體 */
+    border: none;
+    outline: none;
+}
+
+/* =========================================================================
+ * 右側浮動操作按鈕
+ * ========================================================================= */
+
+.floating-nav {
+    position: absolute; /* 掛靠在絕對畫布上 */
+    top: 50%;
+    right: 16px; /* 固定距離右邊 16px */
+    /* 取消 translateY，讓按鈕群的 y 軸位置由正好 50% 處開始往下延伸 */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-icon-btn);
+    z-index: 100;
+}
+
+.nav-btn {
+    width: 60px;
+    height: 60px;
+    padding: var(--space-icon-btn);
+    border-radius: var(--radius-15);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--icon-color);
+}
+/* 讓圖標等比例縮放且長寬死鎖為 36px */
+.nav-btn img,
+.nav-btn svg {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+/* 覆蓋掉 glass-effect 的直角，保留圓角效果 */
+.nav-btn.glass-effect {
+    border-radius: var(--radius-15);
+}
+
+/* =========================================================================
+ * 視窗面板 (Modal)
+ * ========================================================================= */
+.modal-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: transparent; /* 背景透明，讓點擊區域隱形覆蓋全螢幕 */
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-panel {
+    width: 100%;
+    max-width: 320px;
+    padding: 20px; /* 依據設計規範，浮動視窗統一變體 間距-邊框-20 */
+    border-radius: var(--radius-15); /* 依據設計規範，浮動視窗統一套用變體 圓角-15 */
+    background: transparent; /* 面板底無色，純依賴 glass-effect 與文字 */
+}
+
+/* =========================================================================
+ * 詳情頁 (Detail View)
+ * ========================================================================= */
+.detail-view {
+    /* 詳情頁固定背景圖片 */
+    background-image: url('../assets/images/色譜-好伴社計藍.png');
+    background-repeat: repeat; /* 開啟圖片無縫重複拼貼 */
+    background-size: 100% auto; /* 寬度 100% 貼齊手機框，高度 auto 保持不變形往下做重複堆疊 */
+    background-position: top center;
+    background-attachment: fixed;
+    /* 確保這層佈局支援 flex 定位以完整納入 main 的高度 */
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-main {
+    flex: 1; /* 取代 height: 100% 以避免超出外殼被截斷 */
+    width: 100%;
+    overflow-y: auto;
+}
+
+.detail-header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: var(--space-nav); /* 150px */
+    padding: 0 20px; /* 變體 name "間距-邊框-20" Value 20 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+    border: none;
+    outline: none;
+}
+
+.detail-header .header-titles {
+    text-align: center;
+}
+
+.detail-header .header-titles .store-name {
+    font-size: 18px; /* 稍微放大 */
+    font-weight: 700;
+}
+
+.hero-section {
+    position: relative;
+    /* 扣掉 Header 高度，撐開足夠的空間只顯示背景給使用者看 */
+    height: 600px;
+    width: 100%;
+    pointer-events: none; /* 讓底下背景不要被錯誤遮擋點擊 */
+}
+
+.detail-floating-nav {
+    position: absolute;
+    right: 20px;
+    top: 50%; /* 位於 Hero 的中央垂直位置 */
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-icon-btn);
+    z-index: 40;
+    pointer-events: auto; /* 恢復按鈕可點擊 */
+}
+
+.scroll-arrow {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 32px;
+    pointer-events: auto;
+    animation: bounce 2s infinite;
+}
+
+.scroll-arrow img {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* SVG 原本是返回箭頭，旋轉朝下當做 scroll 箭頭 */
+    opacity: 0.7;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+    40% { transform: translate(-50%, -10px); }
+    60% { transform: translate(-50%, -5px); }
+}
+
+.cards-container {
+    padding: 0 0 80px 0; /* 移除外框左右內距，讓卡片徹底滿版 (w 100%)，維持底部安全留白 */
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* 卡片完全緊貼，沒有空隙 */
+}
+
+.info-card {
+    padding: 20px; /* 卡片本身的內文距離保持左右 20px */
+    border-radius: 0; /* 為了讓上下完全密合滿版，取消圓角以避免邊緣露空 */
+    /* 玻璃效果的內外陰影會在相連處自然形成立體感分界線 */
+}
+
+.info-card.center-align {
+    text-align: center;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.contact-info {
+    line-height: 1.6;
+}
+
+.photo-card {
+    margin-bottom: 24px;
+}
+
+.photo-placeholder {
+    width: 100%;
+    height: 200px;
+    border-radius: 8px; /* 極簡圓角供暫代照片使用 */
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 12px;
+}
+
+.photo-caption {
+    text-align: justify;
+    line-height: 1.6;
+}
+
+/* =========================================================================
+ * 設計圖形轉換解說模組 (Element Graphic Transform)
+ * ========================================================================= */
+.transform-graphic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.trans-box {
+    width: 120px;
+    height: 80px;
+    background-color: #69BBCD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.shape-d {
+    width: 24px;
+    height: 48px;
+    border-radius: 0 48px 48px 0;
+    background-color: #fff;
+}
+
+.shape-semi {
+    width: 72px;
+    height: 36px;
+    border-radius: 36px 36px 0 0;
+    background-color: #fff;
+}
+
+/* =========================================================================
+ * 提示訊息視窗 (Toast)
+ * ========================================================================= */
+.toast-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; /* 背景透明以允許背後看見但攔截點擊 */
+}
+
+.toast-overlay.hidden {
+    display: none;
+}
+
+.toast-panel {
+    padding: 20px; /* 依據設計規範，浮動視窗統一變體 間距-邊框-20 */
+    border-radius: var(--radius-15); /* 依據設計規範，浮動視窗統一套用變體 圓角-15 */
+    background: transparent; /* 面板底無色，純依賴 glass-effect 與文字 */
+    text-align: center;
+}
+
+/* =========================================================================
+ * Form Styles 表單專屬樣式 (新增店家模組)
+ * ========================================================================= */
+
+.full-modal-scroll {
+    width: 100%;
+    max-width: none !important; /* 強制覆蓋 .modal-panel 的 400px 限制 */
+    height: 100vh;
+    border-radius: 0;
+    margin: 0;
+    padding: 60px 24px 80px 24px;
+    overflow-y: auto;
+    position: relative;
+    /* 面板無色 套陰影 */
+    background: transparent;
+}
+
+.modal-close-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 110;
+}
+
+.share-form {
+    width: 100%;
+    max-width: none; /* W滿版 */
+    margin: 0 auto;
+    color: #111;
+}
+
+.form-main-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.form-subtitle {
+    margin-bottom: 32px;
+}
+
+.form-section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.form-row label {
+    width: 80px;
+    margin-bottom: 0;
+}
+
+.form-group label {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.form-group input[type="text"], 
+.form-group textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    padding: 8px 12px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.form-row input[type="text"] {
+    flex: 1;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.form-upload-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #111;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.checkbox-group input {
+    margin-top: 4px;
+}
+
+.form-submit-btn {
+    padding: 16px 36px;
+    border-radius: var(--radius-15);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.3);
+    color: #111;
+}

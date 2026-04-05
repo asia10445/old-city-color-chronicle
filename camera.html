@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主題相機 - 舊城時光色譜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        .camera-view {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background-color: #000;
+            overflow: hidden;
+            display: block; /* 移除 flex 讓 absolute 完全掌控 */
+        }
+
+        /* 影片視訊預覽滿版墊底 */
+        #camera-stream {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* 背景圖騰共用設定 */
+        .c-overlay {
+            position: absolute;
+            z-index: 10;
+            background-image: url('./assets/images/色譜-好伴社計藍.png');
+            background-repeat: repeat;
+        }
+
+        /* 按鈕共用設定 */
+        .btn-back {
+            padding: 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-back img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn-capture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+        .btn-capture::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 68px;
+            height: 68px;
+            background: transparent;
+            border-radius: 50%;
+        }
+
+        .action-btn {
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #111;
+            border: none;
+            cursor: pointer;
+            height: 60px;
+            border-radius: var(--radius-15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 隱藏區塊用 */
+        .hidden { display: none !important; }
+
+        /* =========================================================================
+         * 直向佈局 (Portrait - Default)
+         * ========================================================================= */
+        @media (orientation: portrait) {
+            .c-overlay.left, .c-overlay.right, .c-overlay.bar { display: none; }
+            .c-overlay.top { top: 0; left: 0; width: 100%; height: 140px; background-size: 100% auto; }
+            .c-overlay.bottom { bottom: 0; left: 0; width: 100%; height: 220px; background-size: 100% auto; }
+
+            /* 預設拍照畫面按鈕位置 */
+            #state-capture .btn-back { position: absolute; bottom: 80px; left: 32px; z-index: 20; }
+            #state-capture .btn-capture { position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%); z-index: 20; }
+
+            /* 確認畫面按鈕位置 */
+            #state-confirm { position: absolute; bottom: 0; left: 0; width: 100%; height: 220px; z-index: 20; display: flex; align-items: center; padding: 0 32px; gap: 12px; }
+            #state-confirm .btn-cancel { width: 72px; }
+            #state-confirm .btn-confirm { width: 144px; /* 取消按鈕的兩倍大 */ flex: none; max-width: none; }
+        }
+
+        /* =========================================================================
+         * 橫向佈局 (Landscape)
+         * ========================================================================= */
+        @media (orientation: landscape) {
+            .c-overlay.top, .c-overlay.bottom { display: none; }
+            .c-overlay.left { left: 0; top: 0; width: 140px; height: 100%; background-size: 140px auto; }
+            .c-overlay.right { right: 0; top: 0; width: 140px; height: 100%; background-size: 140px auto; }
+            .c-overlay.bar { bottom: 0; left: 0; right: 0; height: 60px; background-size: auto 60px; }
+
+            /* 預設拍照畫面按鈕位置 */
+            #state-capture .btn-back { position: absolute; bottom: 32px; left: 40px; z-index: 20; }
+            #state-capture .btn-capture { position: absolute; top: 50%; right: 30px; transform: translateY(-50%); z-index: 20; }
+
+            /* 確認畫面按鈕位置 */
+            #state-confirm { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; }
+            #state-confirm .btn-back { position: absolute; bottom: 32px; left: 40px; }
+            
+            /* 在橫向時，取消在上方，確認按鈕為取消兩倍大(高度增倍)並放在垂直正中間 */
+            #state-confirm .btn-cancel { position: absolute; top: 15%; right: 34px; width: 72px; }
+            #state-confirm .btn-confirm { position: absolute; top: 50%; transform: translateY(-50%); right: 34px; width: 72px; height: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="camera-view">
+        <!-- 攝影機即時畫面 -->
+        <video id="camera-stream" autoplay playsinline></video>
+        
+        <!-- UI 裝飾圖騰外框疊層 -->
+        <div class="c-overlay top"></div>
+        <div class="c-overlay bottom"></div>
+        <div class="c-overlay left"></div>
+        <div class="c-overlay right"></div>
+        <div class="c-overlay bar"></div>
+        
+        <!-- 【狀態一】: 預設拍照介面 -->
+        <div id="state-capture">
+            <button class="nav-btn glass-effect btn-back" aria-label="返回" onclick="history.back()">
+                <img src="./assets/icons/back.svg" alt="Back"> 
+            </button>
+            <div class="btn-capture glass-effect" id="capture-btn" onclick="capturePhoto()"></div>
+        </div>
+
+        <!-- 【狀態二】: 拍照確認介面 -->
+        <div id="state-confirm" class="hidden">
+            <button class="nav-btn glass-effect btn-back" aria-label="返回" onclick="cancelPhoto()">
+                <img src="./assets/icons/back.svg" alt="Back"> 
+            </button>
+            <button class="action-btn glass-effect btn-cancel" onclick="cancelPhoto()">取消</button>
+            <button class="action-btn glass-effect btn-confirm" onclick="savePhoto()">確認</button>
+        </div>
+
+        <!-- 【狀態三】: 生成載入中 (Loading) -->
+        <div id="state-loading" class="hidden" style="position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 100; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background-color: rgba(255, 255, 255, 0.25);">
+            <h2 class="title-32-48" style="color: #222;">圖騰生成中</h2>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('camera-stream');
+        const stateCapture = document.getElementById('state-capture');
+        const stateConfirm = document.getElementById('state-confirm');
+        
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment" } 
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("無法存取相機:", err);
+            }
+        }
+
+        startCamera();
+
+        // 拍照：凍結畫面並切換至確認模式
+        function capturePhoto() {
+            video.pause();
+            stateCapture.classList.add('hidden');
+            stateConfirm.classList.remove('hidden');
+        }
+
+        // 取消：恢復鏡頭並切換回拍照模式
+        function cancelPhoto() {
+            video.play();
+            stateConfirm.classList.add('hidden');
+            stateCapture.classList.remove('hidden');
+        }
+
+        // 確認：執行儲存、顯示防呆載入畫面、然後跳轉
+        function savePhoto() {
+            // 隱藏目前操作列
+            stateConfirm.classList.add('hidden');
+            // 秀出全螢幕高斯模糊的載入畫面
+            document.getElementById('state-loading').classList.remove('hidden');
+            
+            // 模擬上傳與影像處理的時間（2.5 秒），完成後跳轉至分析成果頁面
+            setTimeout(() => {
+                window.location.href = 'result.html';
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

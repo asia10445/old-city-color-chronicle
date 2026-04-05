@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台中時光地圖 - 舊城時光色譜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        .map-section {
+            padding: 60px 32px;
+            text-align: center;
+        }
+        .map-section img.static-map {
+            width: 100%;
+            height: 220px;
+            object-fit: cover; /* 暫時代替 Google Maps 圖片 */
+            border-radius: var(--radius-15);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-modal);
+        }
+        .map-section h3 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #111;
+        }
+        .map-section p {
+            color: #111;
+            text-align: justify;
+            text-align-last: center;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        /* 簡單的假圖釘動畫 */
+        .pin {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0.4); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(0,0,0,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" style="background: #FDFDFD;">
+        
+        <!-- 頂端玻璃標題 -->
+        <header class="app-header glass-effect" style="position: absolute; top: 0; z-index: 50; margin-bottom: 0;">
+            <h1 class="title-32-48">舊城時光色譜地圖</h1>
+        </header>
+
+        <!-- 首頁無字距台中 -->
+
+        <!-- 內容滾動區 -->
+        <div style="height: 100%; overflow-y: auto; padding-top: 150px; padding-bottom: 80px;">
+
+        <!-- 第一張圖：台中地圖，圖釘標記中區 -->
+        <div class="map-section" style="background-color: #00FF87;">
+            <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #f0f0f0; overflow: hidden; filter: grayscale(0.2) contrast(1.1);">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=Taichung%20City&t=&z=12&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+        </div>
+
+        <div style="padding: 24px; text-align: center; margin-bottom: 24px;">
+            <h3 style="font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; margin-bottom: 16px;">採集台中的時光色調</h3>
+            <p class="body-12-18" style="color:#444; line-height: 1.8;">每一條街道，都藏著一段不曾褪色的故事。<br>點擊色彩，聽聽那些關於土地、設計與生活的真實聲音。<br>看見這座城市最溫暖的色彩分佈。</p>
+        </div>
+
+        <!-- 第二張圖：中區地圖，圖釘標記好伴社計、第二市場 -->
+        <div id="central-district" class="map-section" style="background-color: #A8FADF;">
+            <h3 style="margin-bottom: 8px;">中區</h3>
+            <p class="body-12-18" style="margin-bottom: 24px;">這裡是台中發展的起點，棋盤式的街道鑲嵌著日治時期的巴洛克建築。每一塊紅磚、每一座老橋，都記憶著當年的繁華與喧囂。</p>
+            <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #e0e0e0; overflow: hidden; filter: grayscale(0.2) contrast(1.1);">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=Central%20District,%20Taichung&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+        </div>
+
+        <!-- 第三張圖：好伴社計地圖上的位置 -->
+        <div id="happen" class="map-section" style="background-color: #8FD8D8; cursor: pointer; transition: opacity 0.2s;" onclick="window.location.href='detail.html'" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">
+            <h3 style="margin-bottom: 8px;">好伴社計</h3>
+            <p class="body-12-18" style="margin-bottom: 24px;">讓每個人都能成為<br>改變社會的實踐者</p>
+            <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #e0e0e0; overflow: hidden; filter: grayscale(0.5) contrast(1.2);">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=好伴社計%20台中&t=&z=17&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+        </div>
+
+        <!-- 第四張圖：第二市場地圖上的位置 -->
+        <div id="second-market" class="map-section" style="background-color: #FFEA00;">
+            <h3 style="margin-bottom: 8px;">第二市場</h3>
+            <p class="body-12-18" style="margin-bottom: 24px;">臺中第二市場位於臺中市中區，是一座擁有百年歷史的傳統市場，匯集在地飲食、生活用品與老字號店家。市場不僅是居民日常採買的重要場域，也承載著城市記憶與世代傳承的文化風景。</p>
+            <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #e0e0e0; overflow: hidden; filter: grayscale(0.5) contrast(1.2);">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=台中第二市場&t=&z=16&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+        </div>
+
+        </div> <!-- 結束內容滾動區 -->
+        
+    <!-- 右側浮動導覽列 -->
+        <nav class="floating-nav">
+            <button class="nav-btn glass-effect" aria-label="詳細資訊" onclick="document.getElementById('info-modal').classList.remove('hidden')">
+                <img src="./assets/icons/info.svg" alt="Info">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="搜尋" onclick="document.getElementById('search-modal').classList.remove('hidden'); setTimeout(()=>document.getElementById('search-input-field').focus(), 100);">
+                <img src="./assets/icons/search.svg" alt="Search">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="瀑布" onclick="window.location.href='index.html'">
+                <img src="./assets/icons/layout.svg" alt="Layout">
+            </button>
+        </nav>
+
+        <!-- 資訊說明模態視窗 -->
+        <div id="info-modal" class="modal-overlay hidden" onclick="this.classList.add('hidden')">
+            <div class="modal-panel glass-effect" onclick="event.stopPropagation()">
+                <h2 class="store-name" style="text-align:center; margin-bottom: 24px;">關於舊城時光色譜</h2>
+                <div class="body-12-18" style="display: flex; flex-direction: column; gap: 16px;">
+                    <p style="font-weight:700;">「時光的顏色，是有觸感的。」</p>
+                    <p>我們走進舊城老舖，記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。</p>
+                    <div style="line-height:1.6;">
+                        <p>圖騰組成邏輯</p>
+                        <p>核心紋理 | 材料的肌理流動</p>
+                        <p>幾何節奏 | 空間的排列秩序</p>
+                        <p>歲月斑駁 | 時間的使用痕跡</p>
+                    </div>
+                    <div style="line-height:1.6;">
+                        <p>採集單位：好伴社計</p>
+                        <p>更新日期：2026.04.07</p>
+                        <p>地點：舊城區時光標本庫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜尋器浮動視窗 -->
+        <div id="search-modal" class="modal-overlay hidden" style="z-index: 200;" onclick="this.classList.add('hidden')">
+            <div class="glass-effect" style="border-radius: var(--radius-15); padding: 12px; width: 85%; max-width: 360px; display: flex; align-items: center; background: transparent;" onclick="event.stopPropagation()">
+                <input id="search-input-field" type="text" class="glass-effect" placeholder="搜尋色譜或店家名稱..." style="width: 100%; border: none; outline: none; border-radius: 34px; padding: 16px 24px; font-family: 'Noto Sans TC', sans-serif; font-size: 16px; color: #111; background: transparent;">
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
