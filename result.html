@@ -101,10 +101,10 @@
     </div>
 
     <!-- 標本下載完成訊息視窗 -->
-    <div id="download-toast" class="toast-overlay hidden" onclick="this.classList.add('hidden')" style="z-index: 100;">
-        <div
-            style="background: #999; border-radius: 12px; padding: 12px 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-            <span class="body-16-24" style="color: #111; font-weight: 500;">標本已下載</span>
+    <div id="download-toast" class="toast-overlay hidden" onclick="this.classList.add('hidden')" style="z-index: 100; position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: transparent;">
+        <div class="glass-effect"
+            style="border-radius: 20px; padding: 16px 32px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.15); display: flex; justify-content: center; align-items: center;">
+            <span class="body-16-24" style="color: #222; font-weight: 500;">標本已下載</span>
         </div>
     </div>
 
@@ -129,6 +129,8 @@
         };
 
         let dynamicPatternUrl = './assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png';
+        let dynamicStoreName = '好伴社計藍';
+        let dynamicStoreCode = 'TC-2026-03-24-01';
 
         function renderResult(data) {
             document.getElementById('result-photo').src = data.image;
@@ -204,9 +206,9 @@
             ctx.font = `${fontSize}px "Noto Sans TC", sans-serif`;
             ctx.textBaseline = 'middle';
             ctx.textAlign = 'left';
-            ctx.fillText('好伴社計藍', 20, topBarHeight / 2);
+            ctx.fillText(dynamicStoreName, 20, topBarHeight / 2 + 2); // Slight vertical optical adjustment
             ctx.textAlign = 'right';
-            ctx.fillText('TC-2026-03-24-01', canvas.width - 20, topBarHeight / 2);
+            ctx.fillText(dynamicStoreCode, canvas.width - 20, topBarHeight / 2 + 2);
 
             // 3. 非同步繪製底部藍色圖騰並啟動下載
             const patternImg = new Image();
@@ -225,11 +227,11 @@
             function executeDownload() {
                 try {
                     const link = document.createElement('a');
-                    link.download = '光陰色譜標本_TC-2026-03-24-01.jpg';
+                    link.download = `光陰色譜標本_${dynamicStoreCode}.jpg`;
                     link.href = canvas.toDataURL('image/jpeg', 0.9);
                     link.click();
                 } catch (e) {
-                    console.error("因為 Unsplash 跨域限制，無法執行二進位下載", e);
+                    console.error("因為跨域限制，無法執行二進位下載", e);
                 }
             }
         }
@@ -250,12 +252,23 @@
                         'https://ccqcmzsopezfmmmvlqlr.supabase.co',
                         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcWNtenNvcGV6Zm1tbXZscWxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTE4NjUsImV4cCI6MjA5MDk4Nzg2NX0.v2T_HyAYnwW2wSNBYVUdtRCDMTyffIFQ5nU-JLwvMI4'
                     );
-                    const { data, error } = await supabase.from('shops').select('image').eq('id', shopId).single();
-                    if (!error && data && data.image) {
-                        dynamicPatternUrl = data.image;
-                        // 更新畫面上的兩個預覽長條
-                        document.getElementById('result-overlay-pattern').style.backgroundImage = `url('${data.image}')`;
-                        document.getElementById('result-divider-pattern').style.backgroundImage = `url('${data.image}')`;
+                    const { data, error } = await supabase.from('shops').select('name, slug, image').eq('id', shopId).single();
+                    if (!error && data) {
+                        if (data.image) {
+                            dynamicPatternUrl = data.image;
+                            document.getElementById('result-overlay-pattern').style.backgroundImage = `url('${data.image}')`;
+                            document.getElementById('result-divider-pattern').style.backgroundImage = `url('${data.image}')`;
+                        }
+                        if (data.name) {
+                            dynamicStoreName = data.name;
+                            const nameEls = document.querySelectorAll('.store-name');
+                            nameEls.forEach(el => el.textContent = data.name);
+                        }
+                        if (data.slug) {
+                            dynamicStoreCode = data.slug;
+                            const codeEls = document.querySelectorAll('.code-text');
+                            codeEls.forEach(el => el.textContent = data.slug);
+                        }
                     }
                 } catch (err) {
                     console.error('載入色譜圖框失敗', err);
