@@ -284,9 +284,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (toCameraBtn) {
                 // 移除寫死在 HTML 上的 onclick
                 toCameraBtn.removeAttribute('onclick');
-                toCameraBtn.addEventListener('click', () => {
+                // 先清除所有既有的選取監聽器，避免重複綁定（若是按鈕為單純的 button 可用克隆來確保乾淨）
+                const newCameraBtn = toCameraBtn.cloneNode(true);
+                toCameraBtn.parentNode.replaceChild(newCameraBtn, toCameraBtn);
+                
+                newCameraBtn.addEventListener('click', () => {
                     const modal = document.getElementById('capture-modal-overlay');
-                    if (modal) modal.classList.remove('hidden');
+                    if (modal) modal.style.display = 'flex';
                 });
             }
 
@@ -359,7 +363,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ==========================================
         if (!document.getElementById('capture-modal-overlay')) {
             const modalHTML = `
-                <div id="capture-modal-overlay" class="modal-overlay hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 200; background: rgba(0,0,0,0.5);">
+                <div id="capture-modal-overlay" class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; z-index: 200; background: rgba(0,0,0,0.5);">
                     <div class="modal-panel glass-effect" style="display: flex; flex-direction: column; align-items: center; padding: 32px 40px; border-radius: 24px; gap: 24px; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
                         <h3 class="body-16-24" style="font-weight: 500; color: #111;">開始採集時光</h3>
                         <div style="display: flex; flex-direction: column; gap: 16px;">
@@ -379,7 +383,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const captureModal = document.getElementById('capture-modal-overlay');
             // 點擊背景可關閉
             captureModal.addEventListener('click', (e) => {
-                if (e.target === captureModal) captureModal.classList.add('hidden');
+                if (e.target === captureModal) captureModal.style.display = 'none';
             });
 
             // 1. 點擊相機進入拍照
@@ -402,7 +406,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             window.location.href = id ? `result.html?id=${id}&upload=1` : 'result.html?upload=1';
                         } catch (err) {
                             alert("圖片檔案過大，無法載入");
-                            captureModal.classList.add('hidden');
+                            captureModal.style.display = 'none';
                         }
                     }
                     reader.readAsDataURL(file);
