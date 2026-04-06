@@ -64,7 +64,7 @@
         <!-- 內容滾動區 -->
         <div style="height: 100%; overflow-y: auto; padding-top: 150px; padding-bottom: 80px;">
 
-        <!-- 第一張圖：台中地圖，圖釘標記中區 -->
+        <!-- 第一張圖：台中地圖 -->
         <div class="map-section" style="background-color: #00FF87;">
             <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #f0f0f0; overflow: hidden; filter: grayscale(0.2) contrast(1.1);">
                 <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=Taichung%20City&t=&z=12&ie=UTF8&iwloc=&output=embed"></iframe>
@@ -76,7 +76,7 @@
             <p class="body-12-18" style="color:#444; line-height: 1.8;">每一條街道，都藏著一段不曾褪色的故事。<br>點擊色彩，聽聽那些關於土地、設計與生活的真實聲音。<br>看見這座城市最溫暖的色彩分佈。</p>
         </div>
 
-        <!-- 第二張圖：中區地圖，圖釘標記好伴社計、第二市場 -->
+        <!-- 中區總覽 -->
         <div id="central-district" class="map-section" style="background-color: #A8FADF;">
             <h3 style="margin-bottom: 8px;">中區</h3>
             <p class="body-12-18" style="margin-bottom: 24px;">這裡是台中發展的起點，棋盤式的街道鑲嵌著日治時期的巴洛克建築。每一塊紅磚、每一座老橋，都記憶著當年的繁華與喧囂。</p>
@@ -85,22 +85,9 @@
             </div>
         </div>
 
-        <!-- 第三張圖：好伴社計地圖上的位置 -->
-        <div id="happen" class="map-section" style="background-color: #8FD8D8; cursor: pointer; transition: opacity 0.2s;" onclick="window.location.href='detail.html'" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">
-            <h3 style="margin-bottom: 8px;">好伴社計</h3>
-            <p class="body-12-18" style="margin-bottom: 24px;">讓每個人都能成為<br>改變社會的實踐者</p>
-            <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #e0e0e0; overflow: hidden; filter: grayscale(0.5) contrast(1.2);">
-                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=好伴社計%20台中&t=&z=17&ie=UTF8&iwloc=&output=embed"></iframe>
-            </div>
-        </div>
-
-        <!-- 第四張圖：第二市場地圖上的位置 -->
-        <div id="second-market" class="map-section" style="background-color: #FFEA00;">
-            <h3 style="margin-bottom: 8px;">第二市場</h3>
-            <p class="body-12-18" style="margin-bottom: 24px;">臺中第二市場位於臺中市中區，是一座擁有百年歷史的傳統市場，匯集在地飲食、生活用品與老字號店家。市場不僅是居民日常採買的重要場域，也承載著城市記憶與世代傳承的文化風景。</p>
-            <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #e0e0e0; overflow: hidden; filter: grayscale(0.5) contrast(1.2);">
-                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=台中第二市場&t=&z=16&ie=UTF8&iwloc=&output=embed"></iframe>
-            </div>
+        <!-- 動態店家地圖區塊（由 JS 從資料庫載入） -->
+        <div id="shops-map-container">
+            <div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">載入店家地圖中...</div>
         </div>
 
         </div> <!-- 結束內容滾動區 -->
@@ -148,5 +135,67 @@
         </div>
         
     </div>
+
+    <script type="module">
+        // ==========================================
+        // 從資料庫載入店家座標，動態產生地圖區塊
+        // ==========================================
+        const container = document.getElementById('shops-map-container');
+
+        // 預備一組柔和色彩輪替，作為各店家區塊背景色
+        const bgColors = ['#8FD8D8', '#FFEA00', '#FFB6C1', '#A8FADF', '#C084FC', '#FCD553', '#87CEEB', '#F0E68C'];
+
+        try {
+            const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+            const supabase = createClient(
+                'https://ccqcmzsopezfmmmvlqlr.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcWNtenNvcGV6Zm1tbXZscWxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTE4NjUsImV4cCI6MjA5MDk4Nzg2NX0.v2T_HyAYnwW2wSNBYVUdtRCDMTyffIFQ5nU-JLwvMI4'
+            );
+
+            const { data, error } = await supabase
+                .from('shops')
+                .select('id, name, slogan, address, lat, lng, color')
+                .not('lat', 'is', null)
+                .not('lng', 'is', null);
+
+            if (error) {
+                console.warn('地圖資料載入失敗', error.message);
+                container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">地圖資料載入失敗</div>';
+            } else if (data && data.length > 0) {
+                container.innerHTML = ''; // 清空載入提示
+
+                data.forEach((shop, idx) => {
+                    const bgColor = shop.color || bgColors[idx % bgColors.length];
+                    const mapQuery = encodeURIComponent(shop.address || shop.name);
+
+                    const section = document.createElement('div');
+                    section.className = 'map-section';
+                    section.style.backgroundColor = bgColor;
+                    section.style.cursor = 'pointer';
+                    section.style.transition = 'opacity 0.2s';
+                    section.addEventListener('click', () => {
+                        window.location.href = `detail.html?id=${shop.id}`;
+                    });
+                    section.addEventListener('mouseover', () => section.style.opacity = '0.9');
+                    section.addEventListener('mouseout', () => section.style.opacity = '1');
+
+                    section.innerHTML = `
+                        <h3 style="margin-bottom: 8px;">${shop.name}</h3>
+                        ${shop.slogan ? `<p class="body-12-18" style="margin-bottom: 24px;">${shop.slogan}</p>` : ''}
+                        <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #e0e0e0; overflow: hidden; filter: grayscale(0.5) contrast(1.2);">
+                            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                src="https://maps.google.com/maps?q=${shop.lat},${shop.lng}&t=&z=17&ie=UTF8&iwloc=&output=embed"></iframe>
+                        </div>
+                    `;
+                    container.appendChild(section);
+                });
+            } else {
+                container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">尚無店家地圖資料</div>';
+            }
+        } catch (err) {
+            console.warn('Supabase 載入失敗', err);
+            container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">地圖資料載入失敗</div>';
+        }
+    </script>
 </body>
 </html>
