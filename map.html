@@ -165,7 +165,11 @@
                 container.innerHTML = ''; // 清空載入提示
 
                 data.forEach((shop, idx) => {
-                    const bgColor = shop.color || bgColors[idx % bgColors.length];
+                    // 優先使用資料表的 color 欄位，確保有 # 前綴
+                    let bgColor = '#E0E0E0'; // 預設淺灰
+                    if (shop.color) {
+                        bgColor = shop.color.startsWith('#') ? shop.color : `#${shop.color}`;
+                    }
                     const mapQuery = encodeURIComponent(shop.address || shop.name);
 
                     const section = document.createElement('div');
