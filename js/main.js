@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         { color: '#E0E7FF', name: '舊城雜貨', code: 'TG-2026-0324-0002' },
         { color: '#FF4D4D', name: '熱情紅磚', code: 'RB-2026-0324-0003' },
         { color: '#FFF3C7', name: '時光藝廊', code: 'OS-2026-0324-0004' },
-        { image: './assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png', name: '好伴社計藍', code: 'TC-2026-0324-0005' },
+        { image: './assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png', name: '好伴社計藍', code: 'TC-2026-0324-0005' },
         { color: '#C084FC', name: '紫羅蘭工坊', code: 'VW-2026-0324-0006' },
         { color: '#FCD553', name: '角落咖啡館', code: 'HP-2026-0324-0007' },
         { color: '#FFF3C7', name: '好伴社計', code: 'HP-2026-0324-0008' },

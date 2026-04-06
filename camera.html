@@ -36,6 +36,8 @@
             position: absolute;
             z-index: 10;
             background-repeat: repeat;
+            /* 預設載入一張作為 fallback */
+            background-image: url('./assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png');
         }
 
         /* 按鈕共用設定 */
@@ -54,24 +56,11 @@
         }
 
         .btn-capture {
-            width: 80px;
-            height: 80px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.4);
             cursor: pointer;
             position: relative;
-        }
-
-        .btn-capture::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 68px;
-            height: 68px;
-            background: transparent;
-            border-radius: 50%;
         }
 
         .action-btn {
@@ -120,17 +109,29 @@
                 background-size: 100% auto;
             }
 
+            /* 色譜圖片中顏色較淡的部分是加一個陰影疊加在圖層上方 */
+            .c-overlay.bottom::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 140px;
+                background: rgba(255, 255, 255, 0.45);
+                pointer-events: none;
+            }
+
             /* 預設拍照畫面按鈕位置 */
             #state-capture .btn-back {
                 position: absolute;
-                bottom: 80px;
+                bottom: 40px;
                 left: 32px;
                 z-index: 20;
             }
 
             #state-capture .btn-capture {
                 position: absolute;
-                bottom: 70px;
+                bottom: 34px;
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 20;
@@ -142,12 +143,16 @@
                 bottom: 0;
                 left: 0;
                 width: 100%;
-                height: 220px;
+                height: 140px;
                 z-index: 20;
                 display: flex;
                 align-items: center;
                 padding: 0 32px;
                 gap: 12px;
+            }
+
+            #state-confirm .btn-back {
+                margin-right: auto;
             }
 
             #state-confirm .btn-cancel {
@@ -188,10 +193,23 @@
                 background-size: 140px auto;
             }
 
-            .c-overlay.bar {
+            /* 色譜圖片中顏色較淡的部分是加一個陰影疊加在圖層上方 */
+            .c-overlay.left::after,
+            .c-overlay.right::after {
+                content: '';
+                position: absolute;
+                top: 0;
                 bottom: 0;
                 left: 0;
                 right: 0;
+                background: rgba(255, 255, 255, 0.45);
+                pointer-events: none;
+            }
+
+            .c-overlay.bar {
+                bottom: 0;
+                left: 140px;
+                right: 140px;
                 height: 60px;
                 background-size: auto 60px;
             }
@@ -228,21 +246,21 @@
                 left: 40px;
             }
 
-            /* 在橫向時，取消在上方，確認按鈕為取消兩倍大(高度增倍)並放在垂直正中間 */
+            /* 在橫向時，確認與取消按鈕置於垂直置中，並留有間距 */
             #state-confirm .btn-cancel {
                 position: absolute;
-                top: 15%;
+                bottom: calc(50% + 6px);
                 right: 34px;
                 width: 72px;
+                height: 72px;
             }
 
             #state-confirm .btn-confirm {
                 position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
+                top: calc(50% + 6px);
                 right: 34px;
                 width: 72px;
-                height: 120px;
+                height: 144px;
             }
         }
     </style>

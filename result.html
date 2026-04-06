@@ -14,7 +14,7 @@
 <body>
     <!-- 滿版模糊打底背景 -->
     <div class="app-container"
-        style="background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-repeat: repeat; position: relative;">
+        style="background-image: url('./assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png'); background-repeat: repeat; position: relative;">
         <!-- 高斯模糊與疊加層 -->
         <div
             style="position: absolute; top:0; left:0; width:100%; height:100%; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(255,255,255,0.45); z-index: 1;">
@@ -42,7 +42,7 @@
 
             <!-- 上側銳利橫條紋間隔 -->
             <div
-                style="height: 36px; background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: top; opacity: 0.9;">
+                style="height: 36px; background-image: url('./assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png'); background-size: 100% auto; background-position: top; opacity: 0.9;">
             </div>
 
             <!-- 照片展示與按鈕組 -->
@@ -64,8 +64,8 @@
                         style="width: 100%; display: block;" alt="Photograph">
 
                     <!-- 照片下方的圖騰疊加邊界 -->
-                    <div
-                        style="position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; z-index: 10;">
+                    <div id="result-overlay-pattern"
+                        style="position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background-image: url('./assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png'); background-size: 100% auto; background-position: bottom; z-index: 10;">
                     </div>
 
                     <!-- 右側垂直懸浮按鈕列 -->
@@ -76,7 +76,7 @@
                             <img src="./assets/icons/back.svg" alt="Back">
                         </button>
                         <!-- 前往相機(重新拍照) -->
-                        <button class="nav-btn glass-effect" onclick="window.location.href='camera.html'">
+                        <button class="nav-btn glass-effect" id="btn-retake" onclick="window.location.href='camera.html'">
                             <img src="./assets/icons/camera.svg" alt="Retake Photo">
                         </button>
                         <!-- 下載合成照片 -->
@@ -88,8 +88,8 @@
             </div>
 
             <!-- 下側銳利橫條紋間隔 -->
-            <div
-                style="height: 36px; background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; opacity: 0.9;">
+            <div id="result-divider-pattern"
+                style="height: 36px; background-image: url('./assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png'); background-size: 100% auto; background-position: bottom; opacity: 0.9;">
             </div>
 
             <!-- 顏色自動萃取分析列表 -->
@@ -128,6 +128,8 @@
             ]
         };
 
+        let dynamicPatternUrl = './assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png';
+
         function renderResult(data) {
             document.getElementById('result-photo').src = data.image;
 
@@ -154,6 +156,15 @@
             renderResult(portraitData);
         } else {
             renderResult(landscapeData);
+        }
+
+        // 若為使用者自行上傳的圖片，從 sessionStorage 覆蓋
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('upload') === '1') {
+            const uploadedImg = sessionStorage.getItem('uploadedImage');
+            if (uploadedImg) {
+                document.getElementById('result-photo').src = uploadedImg;
+            }
         }
 
         // 您可以在畫面上點擊最上面的「標本採集完成」字樣手動切換直/橫向版本測試
@@ -199,7 +210,8 @@
 
             // 3. 非同步繪製底部藍色圖騰並啟動下載
             const patternImg = new Image();
-            patternImg.src = './assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png';
+            patternImg.crossOrigin = "anonymous";
+            patternImg.src = dynamicPatternUrl;
             patternImg.onload = () => {
                 const bottomBarHeight = canvas.width * 0.15;
                 const ptrn = ctx.createPattern(patternImg, 'repeat');
@@ -220,6 +232,35 @@
                     console.error("因為 Unsplash 跨域限制，無法執行二進位下載", e);
                 }
             }
+        }
+
+        // ==========================================
+        // 從資料庫載入該店家的色譜圖片與資訊
+        // ==========================================
+        const params = new URLSearchParams(window.location.search);
+        const shopId = params.get('id');
+
+        if (shopId) {
+            document.getElementById('btn-retake').setAttribute('onclick', `window.location.href='camera.html?id=${shopId}'`);
+            
+            (async () => {
+                try {
+                    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+                    const supabase = createClient(
+                        'https://ccqcmzsopezfmmmvlqlr.supabase.co',
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcWNtenNvcGV6Zm1tbXZscWxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTE4NjUsImV4cCI6MjA5MDk4Nzg2NX0.v2T_HyAYnwW2wSNBYVUdtRCDMTyffIFQ5nU-JLwvMI4'
+                    );
+                    const { data, error } = await supabase.from('shops').select('image').eq('id', shopId).single();
+                    if (!error && data && data.image) {
+                        dynamicPatternUrl = data.image;
+                        // 更新畫面上的兩個預覽長條
+                        document.getElementById('result-overlay-pattern').style.backgroundImage = `url('${data.image}')`;
+                        document.getElementById('result-divider-pattern').style.backgroundImage = `url('${data.image}')`;
+                    }
+                } catch (err) {
+                    console.error('載入色譜圖框失敗', err);
+                }
+            })();
         }
     </script>
 </body>

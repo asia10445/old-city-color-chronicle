@@ -279,10 +279,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (toInfoBtn) {
                 toInfoBtn.setAttribute('onclick', `window.location.href='detail.html?id=${shopId}'`);
             }
-            // 拍照按鈕也帶著 ID 走
+            // 拍照按鈕：改為跳出採集時光選擇視窗
             const toCameraBtn = document.querySelector('.detail-floating-nav button[aria-label="拍照"]');
             if (toCameraBtn) {
-                toCameraBtn.setAttribute('onclick', `window.location.href='camera.html?id=${shopId}'`);
+                // 移除寫死在 HTML 上的 onclick
+                toCameraBtn.removeAttribute('onclick');
+                toCameraBtn.addEventListener('click', () => {
+                    const modal = document.getElementById('capture-modal-overlay');
+                    if (modal) modal.classList.remove('hidden');
+                });
             }
 
             // ==========================================
@@ -348,4 +353,60 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error("詳情頁載入發生錯誤：", err);
     }
-});
+
+        // ==========================================
+        // 8. 建立「採集時光」詢問視窗 (供拍照按鈕呼叫)
+        // ==========================================
+        if (!document.getElementById('capture-modal-overlay')) {
+            const modalHTML = `
+                <div id="capture-modal-overlay" class="modal-overlay hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 200; background: rgba(0,0,0,0.5);">
+                    <div class="modal-panel glass-effect" style="display: flex; flex-direction: column; align-items: center; padding: 32px 40px; border-radius: 24px; gap: 24px; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
+                        <h3 class="body-16-24" style="font-weight: 500; color: #111;">開始採集時光</h3>
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <button class="nav-btn glass-effect" id="btn-modal-camera" style="width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center;">
+                                 <img src="./assets/icons/camera.svg" alt="相機" style="width: 32px; height: 32px;">
+                            </button>
+                            <label class="nav-btn glass-effect" style="width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin: 0;">
+                                 <img src="./assets/icons/image.svg" alt="相簿" style="width: 32px; height: 32px;">
+                                 <input type="file" accept="image/*" style="display:none;" id="btn-modal-upload">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            const captureModal = document.getElementById('capture-modal-overlay');
+            // 點擊背景可關閉
+            captureModal.addEventListener('click', (e) => {
+                if (e.target === captureModal) captureModal.classList.add('hidden');
+            });
+
+            // 1. 點擊相機進入拍照
+            const btnCamera = document.getElementById('btn-modal-camera');
+            btnCamera.addEventListener('click', () => {
+                const id = shopId || '';
+                window.location.href = id ? `camera.html?id=${id}` : 'camera.html';
+            });
+
+            // 2. 點擊圖片上傳
+            const btnUpload = document.getElementById('btn-modal-upload');
+            btnUpload.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        try {
+                            sessionStorage.setItem('uploadedImage', evt.target.result);
+                            const id = shopId || '';
+                            window.location.href = id ? `result.html?id=${id}&upload=1` : 'result.html?upload=1';
+                        } catch (err) {
+                            alert("圖片檔案過大，無法載入");
+                            captureModal.classList.add('hidden');
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }); // end DOMContentLoaded
