@@ -101,7 +101,7 @@
     </div>
 
     <!-- 標本下載完成訊息視窗 -->
-    <div id="download-toast" class="toast-overlay hidden" onclick="this.classList.add('hidden')" style="z-index: 100; position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: transparent;">
+    <div id="download-toast" onclick="this.style.display='none'" style="z-index: 100; position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: transparent;">
         <div class="glass-effect"
             style="border-radius: 20px; padding: 16px 32px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.15); display: flex; justify-content: center; align-items: center;">
             <span class="body-16-24" style="color: #222; font-weight: 500;">標本已下載</span>
@@ -180,8 +180,8 @@
         function downloadCompositePhoto() {
             // 秀出「標本已下載」 Toast
             const toast = document.getElementById('download-toast');
-            toast.classList.remove('hidden');
-            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
 
             // 準備 Canvas
             const canvas = document.createElement('canvas');

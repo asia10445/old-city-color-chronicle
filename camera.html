@@ -369,15 +369,39 @@
             // 秀出全螢幕高斯模糊的載入畫面
             document.getElementById('state-loading').classList.remove('hidden');
 
-            // 跳轉時也帶上 shop ID
+            try {
+                // 實裝真正的拍照擷取
+                const canvas = document.createElement('canvas');
+                // 縮放尺寸避免直接塞入幾 MB 照片導致 sessionStorage 爆掉 (QuotaExceededError)
+                const MAX_WIDTH = 1200;
+                let w = video.videoWidth || 1080;
+                let h = video.videoHeight || 1920;
+                
+                if (w > MAX_WIDTH) {
+                    h = Math.floor(h * (MAX_WIDTH / w));
+                    w = MAX_WIDTH;
+                }
+                
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, w, h);
+                
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.85); // 0.85 壓縮比
+                sessionStorage.setItem('uploadedImage', dataUrl);
+            } catch (err) {
+                console.error("無法將畫面存入 session", err);
+            }
+
+            // 跳轉時也帶上 shop ID，並且標示 upload=1 讓成果頁知道要覆蓋圖片
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
-            const targetUrl = id ? `result.html?id=${id}` : 'result.html';
+            const targetUrl = id ? `result.html?id=${id}&upload=1` : 'result.html?upload=1';
 
-            // 模擬上傳與影像處理的時間（2.5 秒），完成後跳轉至分析成果頁面
+            // 模擬處理時間後跳轉至分析成果頁面
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 2500);
+            }, 800);
         }
     </script>
 </body>
