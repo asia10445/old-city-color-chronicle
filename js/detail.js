@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // ==========================================
-            // 7. 下載按鈕：下載色譜圖片 (使用 download_color 欄位)
+            // 7. 下載按鈕：下載色譜圖片 (優先使用 download_color 欄位，若無則使用 image 欄位)
             // ==========================================
             const downloadShopNameEl = document.getElementById('download-shop-name');
             if (downloadShopNameEl) {
@@ -295,8 +295,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const downloadBtn = document.querySelector('button[aria-label="下載"]');
             const downloadToast = document.getElementById('download-toast');
+            
+            const downloadUrl = data.download_color || data.image;
 
-            if (downloadBtn && data.download_color) {
+            if (downloadBtn && downloadUrl) {
                 downloadBtn.addEventListener('click', async () => {
                     const filename = `色譜-${data.name || 'download'}.png`;
 
@@ -308,7 +310,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     };
 
                     try {
-                        const response = await fetch(data.download_color, { mode: 'cors' });
+                        const response = await fetch(downloadUrl, { mode: 'cors' });
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         const blob = await response.blob();
                         const blobUrl = URL.createObjectURL(blob);
@@ -329,7 +331,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     } catch (err) {
                         console.warn('Blob 下載失敗，改用直接開啟', err);
                         const a = document.createElement('a');
-                        a.href = data.download_color;
+                        a.href = downloadUrl;
                         a.download = filename;
                         a.target = '_blank';
                         a.rel = 'noopener noreferrer';

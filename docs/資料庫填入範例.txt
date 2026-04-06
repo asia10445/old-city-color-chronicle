@@ -1,4 +1,4 @@
-資料庫填入範例
+supabase 資料庫填入範例 
 
 基本資訊
 
@@ -14,7 +14,7 @@ slogan	讓每一個人都成為改變社會的實踐者
 
 欄位	填入值
 address	台中市中區民族路35號
-phone	04 2223 1312
+phone	04-2223-1312
 email	happenxdesign@gmail.com
 website	happen.tw
 
@@ -58,10 +58,24 @@ color_5_ratio	(NULL)
 欄位	填入值
 element_1_name	伴圓
 element_1_desc	擷取至官網的圖形，優美中帶有簡潔俐落。以半圓形象徵陪伴與包容，是好伴社計的核心視覺語彙。
-element_1_origin	./assets/images/stores/001-HAP-PEN/element/原始元素-01.png
+element_1_origin	 ./assets/images/stores/001-HAP-PEN/element/原始元素-01.png
 element_1_motif	./assets/images/stores/001-HAP-PEN/motif/視覺圖騰-01.png
 element_2_name	(NULL)
 element_2_desc	(NULL)
 element_2_origin	(NULL)
 element_2_motif	(NULL)
-element_3~5_*	(全部 NULL)
+element_3_name	(NULL)
+element_3_desc	(NULL)
+element_3_origin	(NULL)
+element_3_motif	(NULL)
+element_4_name	(NULL)
+element_4_desc	(NULL)
+element_4_origin	(NULL)
+element_4_motif	(NULL)
+element_5_name	(NULL)
+element_5_desc	(NULL)
+element_5_origin	(NULL)
+element_5_motif	(NULL)
+
+
+download_color  下載圖片 ./assets/images/stores/001-HAP-PEN/color/下載-色譜-好伴社計藍.png
