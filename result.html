@@ -132,49 +132,130 @@
         let dynamicStoreName = '好伴社計藍';
         let dynamicStoreCode = 'TC-2026-03-24-01';
 
-        function renderResult(data) {
-            document.getElementById('result-photo').src = data.image;
+        // ==========================================
+        // 色彩萃取演算法 (簡化版 K-Means)
+        // ==========================================
+        function extractDominantColors(imgElement, k = 3) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            // 縮小取樣尺寸加速處理
+            const SAMPLE_SIZE = 150;
+            const ratio = Math.min(SAMPLE_SIZE / imgElement.naturalWidth, SAMPLE_SIZE / imgElement.naturalHeight, 1);
+            canvas.width = Math.floor(imgElement.naturalWidth * ratio);
+            canvas.height = Math.floor(imgElement.naturalHeight * ratio);
+            ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
+            // 收集像素 (跳過太暗、太亮、太透明的)
+            const pixels = [];
+            for (let i = 0; i < imageData.length; i += 4) {
+                const r = imageData[i], g = imageData[i+1], b = imageData[i+2], a = imageData[i+3];
+                if (a < 128) continue; // 跳過透明
+                const brightness = (r + g + b) / 3;
+                if (brightness < 15 || brightness > 245) continue; // 跳過全黑全白
+                pixels.push([r, g, b]);
+            }
+            if (pixels.length < k) return []; // 防呆
+
+            // 初始化中心點：隨機取 k 個點
+            let centers = [];
+            const step = Math.floor(pixels.length / k);
+            for (let i = 0; i < k; i++) centers.push([...pixels[i * step]]);
+
+            // K-Means 迭代（最多 20 輪）
+            for (let iter = 0; iter < 20; iter++) {
+                const clusters = Array.from({length: k}, () => []);
+                // 分派
+                for (const px of pixels) {
+                    let minDist = Infinity, best = 0;
+                    for (let c = 0; c < k; c++) {
+                        const d = (px[0]-centers[c][0])**2 + (px[1]-centers[c][1])**2 + (px[2]-centers[c][2])**2;
+                        if (d < minDist) { minDist = d; best = c; }
+                    }
+                    clusters[best].push(px);
+                }
+                // 更新中心
+                let converged = true;
+                for (let c = 0; c < k; c++) {
+                    if (clusters[c].length === 0) continue;
+                    const avg = [0,0,0];
+                    for (const px of clusters[c]) { avg[0] += px[0]; avg[1] += px[1]; avg[2] += px[2]; }
+                    const newCenter = [Math.round(avg[0]/clusters[c].length), Math.round(avg[1]/clusters[c].length), Math.round(avg[2]/clusters[c].length)];
+                    if (newCenter[0] !== centers[c][0] || newCenter[1] !== centers[c][1] || newCenter[2] !== centers[c][2]) converged = false;
+                    centers[c] = newCenter;
+                }
+                if (converged) break;
+            }
+
+            // 計算各群佔比並排序（由大到小）
+            const clusterSizes = Array.from({length: k}, () => 0);
+            for (const px of pixels) {
+                let minDist = Infinity, best = 0;
+                for (let c = 0; c < k; c++) {
+                    const d = (px[0]-centers[c][0])**2 + (px[1]-centers[c][1])**2 + (px[2]-centers[c][2])**2;
+                    if (d < minDist) { minDist = d; best = c; }
+                }
+                clusterSizes[best]++;
+            }
+
+            const results = centers.map((c, i) => ({
+                r: c[0], g: c[1], b: c[2],
+                hex: ((1<<24)+(c[0]<<16)+(c[1]<<8)+c[2]).toString(16).slice(1).toUpperCase(),
+                count: clusterSizes[i]
+            }));
+            results.sort((a, b) => b.count - a.count);
+            return results;
+        }
+
+        // ==========================================
+        // 渲染色彩列表
+        // ==========================================
+        function renderColors(colors) {
             const colorContainer = document.getElementById('extracted-colors');
-            colorContainer.innerHTML = ''; // 清空
-
-            data.colors.forEach(col => {
+            colorContainer.innerHTML = '';
+            colors.forEach(col => {
                 const block = document.createElement('div');
                 block.className = 'color-spec';
                 block.style = 'display: flex; gap: 20px; align-items: center;';
                 block.innerHTML = `
-                    <div style="width: 48px; height: 48px; background-color: ${col.bg}; flex-shrink:0;"></div>
+                    <div style="width: 48px; height: 48px; background-color: #${col.hex}; flex-shrink:0;"></div>
                     <div class="body-12-18" style="display: flex; flex: 1; align-items: center;">
                         <span style="flex:1">Hex &nbsp; ${col.hex}</span>
-                        <span style="flex:1">RGB &nbsp; ${col.rgb}</span>
+                        <span style="flex:1">RGB &nbsp; ${col.r} ${col.g} ${col.b}</span>
                     </div>
                 `;
                 colorContainer.appendChild(block);
             });
         }
 
-        // 隨機抽選直向或橫向作為畫面載入展示
-        if (Math.random() > 0.5) {
-            renderResult(portraitData);
-        } else {
-            renderResult(landscapeData);
+        // ==========================================
+        // 照片載入後自動萃取色彩
+        // ==========================================
+        function analyzePhoto() {
+            const img = document.getElementById('result-photo');
+            if (!img.naturalWidth) return; // 圖片尚未載入
+            try {
+                const colors = extractDominantColors(img, 3);
+                if (colors.length > 0) renderColors(colors);
+            } catch(e) {
+                console.warn('色彩萃取失敗 (可能跨域限制)', e);
+            }
         }
 
-        // 若為使用者自行上傳的圖片，從 sessionStorage 覆蓋
+        const resultImg = document.getElementById('result-photo');
+
+        // 若為使用者自行上傳或拍攝的圖片，從 sessionStorage 覆蓋
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('upload') === '1') {
             const uploadedImg = sessionStorage.getItem('uploadedImage');
             if (uploadedImg) {
-                document.getElementById('result-photo').src = uploadedImg;
+                resultImg.src = uploadedImg;
             }
         }
 
-        // 您可以在畫面上點擊最上面的「標本採集完成」字樣手動切換直/橫向版本測試
-        let isPortrait = true;
-        document.querySelector('.body-16-24').addEventListener('click', () => {
-            isPortrait = !isPortrait;
-            renderResult(isPortrait ? portraitData : landscapeData);
-        });
+        // 圖片載入完成後自動分析
+        resultImg.addEventListener('load', analyzePhoto);
+        if (resultImg.complete) analyzePhoto(); // 若已快取則立即分析
 
         // 執行 Canvas 合成下載與觸發 Toast
         function downloadCompositePhoto() {
