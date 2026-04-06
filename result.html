@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>採集結果 - 舊城時光色譜</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
 </head>
+
 <body>
     <!-- 滿版模糊打底背景 -->
-    <div class="app-container" style="background-image: url('./assets/images/色譜-好伴社計藍.png'); background-repeat: repeat; position: relative;">
+    <div class="app-container"
+        style="background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-repeat: repeat; position: relative;">
         <!-- 高斯模糊與疊加層 -->
-        <div style="position: absolute; top:0; left:0; width:100%; height:100%; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(255,255,255,0.45); z-index: 1;"></div>
+        <div
+            style="position: absolute; top:0; left:0; width:100%; height:100%; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(255,255,255,0.45); z-index: 1;">
+        </div>
 
         <!-- 內容主體區 -->
-        <div style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; overflow-y: auto;">
-            
+        <div
+            style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; overflow-y: auto;">
+
             <!-- 頂部與首頁共通的玻璃導覽列 -->
             <header class="detail-header glass-effect" style="margin-bottom: 0;">
                 <button class="nav-btn glass-effect" onclick="window.location.href='index.html'" aria-label="回首頁">
@@ -31,29 +39,38 @@
             <div class="body-16-24" style="text-align: center; font-weight: 700; padding: 12px 0;">
                 標本採集完成
             </div>
-            
+
             <!-- 上側銳利橫條紋間隔 -->
-            <div style="height: 36px; background-image: url('./assets/images/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: top; opacity: 0.9;"></div>
+            <div
+                style="height: 36px; background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: top; opacity: 0.9;">
+            </div>
 
             <!-- 照片展示與按鈕組 -->
-            <div style="flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 24px 48px 24px 32px;">
+            <div
+                style="flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 24px 48px 24px 32px;">
                 <!-- 照片卡 -->
                 <div style="width: 100%; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                    
+
                     <!-- 頂端浮水印色板文字 -->
-                    <div style="background: rgba(255,255,255,0.6); display: flex; font-size: 10px; padding: 4px 8px; justify-content: space-between; position: absolute; top: 0; left: 0; width: 100%; z-index: 10; font-family: 'Noto Sans TC', sans-serif;">
+                    <div
+                        style="background: rgba(255,255,255,0.6); display: flex; font-size: 10px; padding: 4px 8px; justify-content: space-between; position: absolute; top: 0; left: 0; width: 100%; z-index: 10; font-family: 'Noto Sans TC', sans-serif;">
                         <span>好伴社計藍</span>
                         <span>TC-2026-03-24-01</span>
                     </div>
 
                     <!-- 影像本體 (利用 JS 模擬直式與橫式載入，並加上 crossorigin 協助 Canvas 合成) -->
-                    <img id="result-photo" crossorigin="anonymous" src="https://images.unsplash.com/photo-1541414779316-d565ddfae155?q=80&w=800&auto=format&fit=crop" style="width: 100%; display: block;" alt="Photograph">
+                    <img id="result-photo" crossorigin="anonymous"
+                        src="https://images.unsplash.com/photo-1541414779316-d565ddfae155?q=80&w=800&auto=format&fit=crop"
+                        style="width: 100%; display: block;" alt="Photograph">
 
                     <!-- 照片下方的圖騰疊加邊界 -->
-                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background-image: url('./assets/images/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; z-index: 10;"></div>
+                    <div
+                        style="position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; z-index: 10;">
+                    </div>
 
                     <!-- 右側垂直懸浮按鈕列 -->
-                    <div style="position: absolute; right: -30px; bottom: 10px; display: flex; flex-direction: column; gap: 12px; z-index: 20;">
+                    <div
+                        style="position: absolute; right: -30px; bottom: 10px; display: flex; flex-direction: column; gap: 12px; z-index: 20;">
                         <!-- 返回上一頁(退回) -->
                         <button class="nav-btn glass-effect" onclick="window.history.back()">
                             <img src="./assets/icons/back.svg" alt="Back">
@@ -71,7 +88,9 @@
             </div>
 
             <!-- 下側銳利橫條紋間隔 -->
-            <div style="height: 36px; background-image: url('./assets/images/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; opacity: 0.9;"></div>
+            <div
+                style="height: 36px; background-image: url('./assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png'); background-size: 100% auto; background-position: bottom; opacity: 0.9;">
+            </div>
 
             <!-- 顏色自動萃取分析列表 -->
             <div id="extracted-colors" style="padding: 24px 32px; display: flex; flex-direction: column; gap: 16px;">
@@ -83,7 +102,8 @@
 
     <!-- 標本下載完成訊息視窗 -->
     <div id="download-toast" class="toast-overlay hidden" onclick="this.classList.add('hidden')" style="z-index: 100;">
-        <div style="background: #999; border-radius: 12px; padding: 12px 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <div
+            style="background: #999; border-radius: 12px; padding: 12px 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <span class="body-16-24" style="color: #111; font-weight: 500;">標本已下載</span>
         </div>
     </div>
@@ -110,7 +130,7 @@
 
         function renderResult(data) {
             document.getElementById('result-photo').src = data.image;
-            
+
             const colorContainer = document.getElementById('extracted-colors');
             colorContainer.innerHTML = ''; // 清空
 
@@ -130,7 +150,7 @@
         }
 
         // 隨機抽選直向或橫向作為畫面載入展示
-        if(Math.random() > 0.5){
+        if (Math.random() > 0.5) {
             renderResult(portraitData);
         } else {
             renderResult(landscapeData);
@@ -154,20 +174,20 @@
             const canvas = document.createElement('canvas');
             const img = document.getElementById('result-photo');
             const ctx = canvas.getContext('2d');
-            
+
             canvas.width = img.naturalWidth;
             canvas.height = img.naturalHeight;
-            
+
             if (canvas.width === 0) return; // 圖片尚未載入防呆
 
             // 1. 繪製底部相片
             ctx.drawImage(img, 0, 0);
 
             // 2. 繪製頂部微透明浮水印帶
-            const topBarHeight = canvas.width * 0.08; 
+            const topBarHeight = canvas.width * 0.08;
             ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             ctx.fillRect(0, 0, canvas.width, topBarHeight);
-            
+
             ctx.fillStyle = '#111';
             const fontSize = topBarHeight * 0.45;
             ctx.font = `${fontSize}px "Noto Sans TC", sans-serif`;
@@ -179,7 +199,7 @@
 
             // 3. 非同步繪製底部藍色圖騰並啟動下載
             const patternImg = new Image();
-            patternImg.src = './assets/images/色譜-好伴社計藍.png';
+            patternImg.src = './assets/images/stores/001-HAP-PEN/色譜-好伴社計藍.png';
             patternImg.onload = () => {
                 const bottomBarHeight = canvas.width * 0.15;
                 const ptrn = ctx.createPattern(patternImg, 'repeat');
@@ -203,4 +223,5 @@
         }
     </script>
 </body>
+
 </html>

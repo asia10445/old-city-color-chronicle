@@ -1,0 +1,67 @@
+資料庫填入範例
+
+基本資訊
+
+欄位	填入值
+name	好伴社計
+color	(NULL，此店以 image 圖案取代純色)
+code	TC-2026-03-24-01
+image	./assets/images/stores/001-HAP-PEN/color/色譜-好伴社計藍.png
+slogan	讓每一個人都成為改變社會的實踐者
+
+
+聯絡資訊
+
+欄位	填入值
+address	台中市中區民族路35號
+phone	04 2223 1312
+email	happenxdesign@gmail.com
+website	happen.tw
+
+理念文字
+欄位	填入值
+philosophy_title	從自身經驗出發持續投入的地方
+philosophy_content	扎根在臺中中舊市區的設計事務所，透過「社會設計」引導眾人一起投入具公共性的行動，創造社會價值，讓每一個人都能成為改變社會的實踐者。
+
+時光故事（店家照片）
+欄位	填入值
+photo_url_1	./assets/images/stores/001-HAP-PEN/store/店家照片-01.jpg
+photo_caption_1	(照片說明文字，可留空)
+photo_url_2	./assets/images/stores/001-HAP-PEN/store/店家照片-02.jpg
+photo_caption_2	(照片說明文字，可留空)
+photo_url_3	./assets/images/stores/001-HAP-PEN/store/店家照片-03.jpg
+photo_caption_3	(照片說明文字，可留空)
+photo_url_4	(NULL)
+photo_caption_4	(NULL)
+photo_url_5	(NULL)
+photo_caption_5	(NULL)
+
+色票比例
+欄位	填入值
+color_1_hex	69BBCD
+color_1_name	好伴藍
+color_1_ratio	60
+color_2_hex	FFFFFF
+color_2_name	好伴白
+color_2_ratio	40
+color_3_hex	(NULL)
+color_3_name	(NULL)
+color_3_ratio	(NULL)
+color_4_hex	(NULL)
+color_4_name	(NULL)
+color_4_ratio	(NULL)
+color_5_hex	(NULL)
+color_5_name	(NULL)
+color_5_ratio	(NULL)
+
+元素轉換
+欄位	填入值
+element_1_name	伴圓
+element_1_desc	擷取至官網的圖形，優美中帶有簡潔俐落。以半圓形象徵陪伴與包容，是好伴社計的核心視覺語彙。
+element_1_origin	./assets/images/stores/001-HAP-PEN/element/原始元素-01.png
+element_1_motif	./assets/images/stores/001-HAP-PEN/motif/視覺圖騰-01.png
+element_2_name	(NULL)
+element_2_desc	(NULL)
+element_2_origin	(NULL)
+element_2_motif	(NULL)
+element_3~5_*	(全部 NULL)

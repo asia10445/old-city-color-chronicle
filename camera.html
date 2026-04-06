@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>主題相機 - 舊城時光色譜</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <style>
         .camera-view {
@@ -13,23 +16,25 @@
             position: relative;
             background-color: #000;
             overflow: hidden;
-            display: block; /* 移除 flex 讓 absolute 完全掌控 */
+            display: block;
+            /* 移除 flex 讓 absolute 完全掌控 */
         }
 
         /* 影片視訊預覽滿版墊底 */
         #camera-stream {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             z-index: 1;
         }
 
-        /* 背景圖騰共用設定 */
+        /* 背景圖騰共用設定 — background-image 由 JS 動態載入 */
         .c-overlay {
             position: absolute;
             z-index: 10;
-            background-image: url('./assets/images/色譜-好伴社計藍.png');
             background-repeat: repeat;
         }
 
@@ -42,6 +47,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .btn-back img {
             width: 32px;
             height: 32px;
@@ -55,10 +61,12 @@
             cursor: pointer;
             position: relative;
         }
+
         .btn-capture::after {
             content: '';
             position: absolute;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             width: 68px;
             height: 68px;
@@ -81,65 +89,181 @@
         }
 
         /* 隱藏區塊用 */
-        .hidden { display: none !important; }
+        .hidden {
+            display: none !important;
+        }
 
         /* =========================================================================
          * 直向佈局 (Portrait - Default)
          * ========================================================================= */
         @media (orientation: portrait) {
-            .c-overlay.left, .c-overlay.right, .c-overlay.bar { display: none; }
-            .c-overlay.top { top: 0; left: 0; width: 100%; height: 140px; background-size: 100% auto; }
-            .c-overlay.bottom { bottom: 0; left: 0; width: 100%; height: 220px; background-size: 100% auto; }
+
+            .c-overlay.left,
+            .c-overlay.right,
+            .c-overlay.bar {
+                display: none;
+            }
+
+            .c-overlay.top {
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 140px;
+                background-size: 100% auto;
+            }
+
+            .c-overlay.bottom {
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 220px;
+                background-size: 100% auto;
+            }
 
             /* 預設拍照畫面按鈕位置 */
-            #state-capture .btn-back { position: absolute; bottom: 80px; left: 32px; z-index: 20; }
-            #state-capture .btn-capture { position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%); z-index: 20; }
+            #state-capture .btn-back {
+                position: absolute;
+                bottom: 80px;
+                left: 32px;
+                z-index: 20;
+            }
+
+            #state-capture .btn-capture {
+                position: absolute;
+                bottom: 70px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 20;
+            }
 
             /* 確認畫面按鈕位置 */
-            #state-confirm { position: absolute; bottom: 0; left: 0; width: 100%; height: 220px; z-index: 20; display: flex; align-items: center; padding: 0 32px; gap: 12px; }
-            #state-confirm .btn-cancel { width: 72px; }
-            #state-confirm .btn-confirm { width: 144px; /* 取消按鈕的兩倍大 */ flex: none; max-width: none; }
+            #state-confirm {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 220px;
+                z-index: 20;
+                display: flex;
+                align-items: center;
+                padding: 0 32px;
+                gap: 12px;
+            }
+
+            #state-confirm .btn-cancel {
+                width: 72px;
+            }
+
+            #state-confirm .btn-confirm {
+                width: 144px;
+                /* 取消按鈕的兩倍大 */
+                flex: none;
+                max-width: none;
+            }
         }
 
         /* =========================================================================
          * 橫向佈局 (Landscape)
          * ========================================================================= */
         @media (orientation: landscape) {
-            .c-overlay.top, .c-overlay.bottom { display: none; }
-            .c-overlay.left { left: 0; top: 0; width: 140px; height: 100%; background-size: 140px auto; }
-            .c-overlay.right { right: 0; top: 0; width: 140px; height: 100%; background-size: 140px auto; }
-            .c-overlay.bar { bottom: 0; left: 0; right: 0; height: 60px; background-size: auto 60px; }
+
+            .c-overlay.top,
+            .c-overlay.bottom {
+                display: none;
+            }
+
+            .c-overlay.left {
+                left: 0;
+                top: 0;
+                width: 140px;
+                height: 100%;
+                background-size: 140px auto;
+            }
+
+            .c-overlay.right {
+                right: 0;
+                top: 0;
+                width: 140px;
+                height: 100%;
+                background-size: 140px auto;
+            }
+
+            .c-overlay.bar {
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background-size: auto 60px;
+            }
 
             /* 預設拍照畫面按鈕位置 */
-            #state-capture .btn-back { position: absolute; bottom: 32px; left: 40px; z-index: 20; }
-            #state-capture .btn-capture { position: absolute; top: 50%; right: 30px; transform: translateY(-50%); z-index: 20; }
+            #state-capture .btn-back {
+                position: absolute;
+                bottom: 32px;
+                left: 40px;
+                z-index: 20;
+            }
+
+            #state-capture .btn-capture {
+                position: absolute;
+                top: 50%;
+                right: 30px;
+                transform: translateY(-50%);
+                z-index: 20;
+            }
 
             /* 確認畫面按鈕位置 */
-            #state-confirm { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; }
-            #state-confirm .btn-back { position: absolute; bottom: 32px; left: 40px; }
-            
+            #state-confirm {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 20;
+            }
+
+            #state-confirm .btn-back {
+                position: absolute;
+                bottom: 32px;
+                left: 40px;
+            }
+
             /* 在橫向時，取消在上方，確認按鈕為取消兩倍大(高度增倍)並放在垂直正中間 */
-            #state-confirm .btn-cancel { position: absolute; top: 15%; right: 34px; width: 72px; }
-            #state-confirm .btn-confirm { position: absolute; top: 50%; transform: translateY(-50%); right: 34px; width: 72px; height: 120px; }
+            #state-confirm .btn-cancel {
+                position: absolute;
+                top: 15%;
+                right: 34px;
+                width: 72px;
+            }
+
+            #state-confirm .btn-confirm {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 34px;
+                width: 72px;
+                height: 120px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="camera-view">
         <!-- 攝影機即時畫面 -->
         <video id="camera-stream" autoplay playsinline></video>
-        
+
         <!-- UI 裝飾圖騰外框疊層 -->
         <div class="c-overlay top"></div>
         <div class="c-overlay bottom"></div>
         <div class="c-overlay left"></div>
         <div class="c-overlay right"></div>
         <div class="c-overlay bar"></div>
-        
+
         <!-- 【狀態一】: 預設拍照介面 -->
         <div id="state-capture">
             <button class="nav-btn glass-effect btn-back" aria-label="返回" onclick="history.back()">
-                <img src="./assets/icons/back.svg" alt="Back"> 
+                <img src="./assets/icons/back.svg" alt="Back">
             </button>
             <div class="btn-capture glass-effect" id="capture-btn" onclick="capturePhoto()"></div>
         </div>
@@ -147,27 +271,56 @@
         <!-- 【狀態二】: 拍照確認介面 -->
         <div id="state-confirm" class="hidden">
             <button class="nav-btn glass-effect btn-back" aria-label="返回" onclick="cancelPhoto()">
-                <img src="./assets/icons/back.svg" alt="Back"> 
+                <img src="./assets/icons/back.svg" alt="Back">
             </button>
             <button class="action-btn glass-effect btn-cancel" onclick="cancelPhoto()">取消</button>
             <button class="action-btn glass-effect btn-confirm" onclick="savePhoto()">確認</button>
         </div>
 
         <!-- 【狀態三】: 生成載入中 (Loading) -->
-        <div id="state-loading" class="hidden" style="position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 100; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background-color: rgba(255, 255, 255, 0.25);">
+        <div id="state-loading" class="hidden"
+            style="position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 100; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background-color: rgba(255, 255, 255, 0.25);">
             <h2 class="title-32-48" style="color: #222;">圖騰生成中</h2>
         </div>
     </div>
+
+    <script type="module">
+        // ==========================================
+        // 從資料庫載入該店家的色譜圖片作為圖框
+        // ==========================================
+        const params = new URLSearchParams(window.location.search);
+        const shopId = params.get('id');
+
+        (async () => {
+            if (!shopId) return;
+            try {
+                const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+                const supabase = createClient(
+                    'https://ccqcmzsopezfmmmvlqlr.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcWNtenNvcGV6Zm1tbXZscWxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTE4NjUsImV4cCI6MjA5MDk4Nzg2NX0.v2T_HyAYnwW2wSNBYVUdtRCDMTyffIFQ5nU-JLwvMI4'
+                );
+                const { data, error } = await supabase.from('shops').select('image').eq('id', shopId).single();
+                if (error || !data || !data.image) return;
+
+                // 將圖片套用到所有圖騰外框疊層
+                document.querySelectorAll('.c-overlay').forEach(el => {
+                    el.style.backgroundImage = `url('${data.image}')`;
+                });
+            } catch (err) {
+                console.error('camera 載入色譜圖框失敗', err);
+            }
+        })();
+    </script>
 
     <script>
         const video = document.getElementById('camera-stream');
         const stateCapture = document.getElementById('state-capture');
         const stateConfirm = document.getElementById('state-confirm');
-        
+
         async function startCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "environment" } 
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" }
                 });
                 video.srcObject = stream;
             } catch (err) {
@@ -197,12 +350,18 @@
             stateConfirm.classList.add('hidden');
             // 秀出全螢幕高斯模糊的載入畫面
             document.getElementById('state-loading').classList.remove('hidden');
-            
+
+            // 跳轉時也帶上 shop ID
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const targetUrl = id ? `result.html?id=${id}` : 'result.html';
+
             // 模擬上傳與影像處理的時間（2.5 秒），完成後跳轉至分析成果頁面
             setTimeout(() => {
-                window.location.href = 'result.html';
+                window.location.href = targetUrl;
             }, 2500);
         }
     </script>
 </body>
+
 </html>

@@ -15,8 +15,8 @@
                 <img src="./assets/icons/home.svg" alt="Home">
             </button>
             <div class="header-titles">
-                <h1 class="store-name">好伴社計藍</h1>
-                <div class="body-12-18">TC-2026-03-24-01</div>
+                <h1 class="store-name" id="slogan-shop-name">好伴社計藍</h1>
+                <div class="code-text body-14-21">TC-2026-03-24-01</div>
             </div>
             <button class="nav-btn glass-effect" aria-label="色票組成元素" onclick="window.location.href='detail-element.html'">
                 <img src="./assets/icons/swatch.svg" alt="Swatch">
@@ -45,60 +45,40 @@
             <!-- 內文各個獨立卡片展示區 -->
             <div class="cards-container">
                 
-                <!-- 卡片 1：好伴社計 讓每個人... -->
-                <section class="info-card glass-effect center-align">
-                    <h2 class="title-bold" style="margin-bottom: 8px;">好伴社計</h2>
-                    <p class="body-12-18">讓每一個人都成為<br>改變社會的實踐者</p>
+                <!-- 卡片 1：Slogan -->
+                <section id="card-slogan" class="info-card glass-effect center-align">
+                    <h2 class="title-bold" style="margin-bottom: 8px;" id="slogan-shop-name">好伴社計</h2>
+                    <p class="body-12-18" id="slogan-text">讓每一個人都成為<br>改變社會的實踐者</p>
                 </section>
 
-                <!-- 卡片 2：聯絡資訊 台中...happen.tw -->
-                <section class="info-card glass-effect center-align">
+                <!-- 卡片 2：聯絡資訊 -->
+                <section id="card-contact" class="info-card glass-effect center-align">
                     <div class="contact-info body-12-18">
-                        台中市中區民族路35號<br>
-                        04 2223 1312<br>
-                        happenxdesign@gmail.com<br>
-                        happen.tw
+                        <div id="contact-address">台中市中區民族路35號</div>
+                        <div id="contact-phone">04 2223 1312</div>
+                        <div id="contact-email">happenxdesign@gmail.com</div>
+                        <div id="contact-website">happen.tw</div>
                     </div>
                 </section>
 
                 <!-- 卡片 3：理念與文字 -->
-                <section class="info-card glass-effect">
-                    <h3 class="section-title">從自身經驗出發持續投入的地方</h3>
-                    <p class="body-12-18">
+                <section id="card-philosophy" class="info-card glass-effect">
+                    <h3 class="section-title" id="philosophy-title">從自身經驗出發持續投入的地方</h3>
+                    <p class="body-12-18" id="philosophy-text" style="white-space: pre-wrap;">
                         扎根在臺中中舊市區的設計事務所，透過「社會設計」引導眾人一起投入具公共性的行動，創造社會價值，讓每一個人都能成為改變社會的實踐者。<br><br>
                         以地方觀察與文化轉譯為核心，轉化街區日常、老店故事與市場元素轉化為設計商品與視覺內容。展現舊城區獨有的生活氛圍與歷史感。
                     </p>
                 </section>
 
-                <!-- 卡片 4：店家照片 -->
-                <section class="info-card glass-effect center-align">
-                    <h3 class="section-title" style="text-align: center;">店家照片</h3>
-                    
-                    <div class="photo-card">
-                        <!-- 暫代照片框 -->
-                        <div class="photo-placeholder" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
-                        <p class="body-12-18 photo-caption">說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案。</p>
-                    </div>
-
-                    <div class="photo-card">
-                        <div class="photo-placeholder" style="background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
-                        <p class="body-12-18 photo-caption">說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案說明文案。</p>
-                    </div>
-
-                    <div class="photo-card">
-                        <div class="photo-placeholder" style="background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
-                        <p class="body-12-18 photo-caption">說明文案說明文案說明文案說明文案說明文案說明文案說明文案。</p>
+                <!-- 卡片 4：時光故事 -->
+                <section id="card-photos" class="info-card glass-effect center-align">
+                    <h3 class="section-title" style="text-align: center;">時光故事</h3>
+                    <div id="photos-container">
+                        <!-- 照片動態載入區 -->
                     </div>
                 </section>
 
-                <!-- 卡片 5：職人故事 -->
-                <section class="info-card glass-effect">
-                    <h3 class="section-title" style="text-align: center;">職人故事</h3>
-                    <p class="body-12-18">
-                        扎根在臺中中舊市區的設計事務所，透過「社會設計」引導眾人一起投入具公共性的行動，創造社會價值，讓每一個人都能成為改變社會的實踐者。<br><br>
-                        以地方觀察與文化轉譯為核心，轉化街區日常、老店故事與市場元素轉化為設計商品與視覺內容。展現舊城區獨有的生活氛圍與歷史感。
-                    </p>
-                </section>
+
                 
             </div>
         </main>
@@ -106,22 +86,11 @@
         <!-- 下載完成訊息視窗 -->
         <div id="download-toast" class="toast-overlay hidden" onclick="this.classList.add('hidden')">
             <div class="toast-panel glass-effect">
-                <span class="body-16-24" style="white-space: nowrap;">色譜 好伴社計藍 已下載</span>
+                <span class="body-16-24" style="white-space: nowrap;">色譜 <span id="download-shop-name">好伴社計藍</span> 已下載</span>
             </div>
         </div>
     </div>
 
-    <script>
-        // 綁定下載按鈕的點擊事件
-        const downloadBtn = document.querySelector('button[aria-label="下載"]');
-        const downloadToast = document.getElementById('download-toast');
-        if (downloadBtn && downloadToast) {
-            downloadBtn.addEventListener('click', () => {
-                downloadToast.classList.remove('hidden');
-                // 三秒後自動隱藏，或者使用者也可以提早點擊螢幕關閉
-                setTimeout(() => downloadToast.classList.add('hidden'), 3000);
-            });
-        }
-    </script>
+    <script src="./js/detail.js"></script>
 </body>
 </html>

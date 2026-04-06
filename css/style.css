@@ -33,23 +33,29 @@
 
 body {
     font-family: 'Noto Sans TC', sans-serif;
-    background-color: #ECECEC; /* 外圍背景，凸顯手機框 */
+    background-color: #ECECEC;
+    /* 外圍背景，凸顯手機框 */
     color: var(--text-color);
     display: flex;
     justify-content: center;
-    align-items: center; /* 為了方便模擬手機直式螢幕，上下方均等置中 */
+    align-items: center;
+    /* 為了方便模擬手機直式螢幕，上下方均等置中 */
     min-height: 100vh;
     /* 移除 overflow-x: hidden 確保視窗操作正準 */
 }
 
 /* 響應式主容器 */
 .app-container {
-    width: 393px; /* 鎖定畫布外框為 393 */
-    height: 852px; /* 鎖定畫布外框為 852 */
+    width: 393px;
+    /* 鎖定畫布外框為 393 */
+    height: 852px;
+    /* 鎖定畫布外框為 852 */
     background-color: var(--color-time-white);
     position: relative;
-    box-shadow: 0 0 20px rgba(0,0,0,0.08); /* 桌面瀏覽時的裝置陰影 */
-    overflow: hidden; /* Clip Content 讓超出範圍直接裁切隱藏 */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+    /* 桌面瀏覽時的裝置陰影 */
+    overflow: hidden;
+    /* Clip Content 讓超出範圍直接裁切隱藏 */
 }
 
 /* =========================================================================
@@ -59,13 +65,32 @@ body {
     font-family: 'Noto Serif TC', serif;
     font-size: 32px;
     line-height: 48px;
-    font-weight: 700; /* BOLD */
+    font-weight: 700;
+    /* BOLD */
 }
 
+/* 店家名稱 Noto Sans TC Medium 字級18 行距27 */
 .store-name {
+    font-family: 'Noto Sans TC', sans-serif;
     font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+/* 標題-24/36 Noto Serif TC BOLD 字級24 行距36 */
+.title-24-36 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 24px;
+    line-height: 36px;
+    font-weight: 700;
+}
+
+/* 內文-14/21 Noto Sans TC Regular 字級14 行距21 */
+.body-14-21 {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
 }
 
 /* 內文-12/18 Noto Sans TC Regular 字級12 行距18 */
@@ -79,7 +104,8 @@ body {
 .body-16-24 {
     font-size: 16px;
     line-height: 24px;
-    font-weight: 400; /* Regular */
+    font-weight: 400;
+    /* Regular */
 }
 
 /* =========================================================================
@@ -87,12 +113,12 @@ body {
  * ========================================================================= */
 .glass-effect {
     /* Fill / 漸層底色：模擬 FFFFFF 25%, 171717 100%, 8C8C8C 25% 中透光的感覺 */
-    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(140,140,140,0.25) 100%);
-    
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(140, 140, 140, 0.25) 100%);
+
     /* Background Uniform blur12 */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    
+
     /* 嚴格按照 Effect 設計：
        inner shadow x3 y3 blur0.5 spread -3.5 ffffff 100%
        inner shadow x2 y2 blur0.5 spread -2  262626 100%
@@ -102,11 +128,11 @@ body {
        drop shadow x0 y0 blur2 spread0 000000 10%
        drop shadow x0 y1 blur8 spread0  000000 10% */
     /* 改為無黑線/外框線的版本，保持玻璃輕透感 */
-    box-shadow: 
+    box-shadow:
         inset 3px 3px 0.5px -3.5px #ffffff,
         inset 0px 0px 8px 0px #f2f2f2,
-        0px 0px 2px 0px rgba(0,0,0,0.1),
-        0px 1px 8px 0px rgba(0,0,0,0.1);
+        0px 0px 2px 0px rgba(0, 0, 0, 0.1),
+        0px 1px 8px 0px rgba(0, 0, 0, 0.1);
 }
 
 /* =========================================================================
@@ -115,7 +141,8 @@ body {
 
 /* 頂部導覽文字區塊 */
 .app-header {
-    position: absolute; /* 利用絕對定位受控於 393x852 的框內，不再受限於螢幕視窗座標 */
+    position: absolute;
+    /* 利用絕對定位受控於 393x852 的框內，不再受限於螢幕視窗座標 */
     top: 0;
     left: 0;
     width: 100%;
@@ -139,26 +166,32 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    padding: 20px 20px 120px 20px; /* 左、右間距改為 20，頂部由 y20 開始 */
+    padding: 20px 20px 120px 20px;
+    /* 左、右間距改為 20，頂部由 y20 開始 */
     height: 100%;
-    overflow-y: auto; /* 讓瀑布流區塊自己負責捲動，保持其餘 UI 固定 */
+    overflow-y: auto;
+    /* 讓瀑布流區塊自己負責捲動，保持其餘 UI 固定 */
 }
 
 .masonry-col {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    flex: 1; /* 均分左右可用寬度 */
+    flex: 1;
+    /* 均分左右可用寬度 */
 }
 
 /* 單張色卡 */
 .color-card {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* 讓名稱區域置底 */
+    justify-content: flex-end;
+    /* 讓名稱區域置底 */
     position: relative;
-    border: none; /* 確保沒有外框線 */
-    outline: none; /* 確保沒有外框線 */
+    border: none;
+    /* 確保沒有外框線 */
+    outline: none;
+    /* 確保沒有外框線 */
 }
 
 /* 依照規則設定兩種卡片比例 */
@@ -174,7 +207,8 @@ body {
 .color-card .card-caption {
     width: 100%;
     padding: 12px;
-    border-radius: 0; /* 配合卡片的直角疊加，維持方正框體 */
+    border-radius: 0;
+    /* 配合卡片的直角疊加，維持方正框體 */
     border: none;
     outline: none;
 }
@@ -184,9 +218,11 @@ body {
  * ========================================================================= */
 
 .floating-nav {
-    position: absolute; /* 掛靠在絕對畫布上 */
+    position: absolute;
+    /* 掛靠在絕對畫布上 */
     top: 50%;
-    right: 16px; /* 固定距離右邊 16px */
+    right: 16px;
+    /* 固定距離右邊 16px */
     /* 取消 translateY，讓按鈕群的 y 軸位置由正好 50% 處開始往下延伸 */
     display: flex;
     flex-direction: column;
@@ -206,6 +242,7 @@ body {
     justify-content: center;
     color: var(--icon-color);
 }
+
 /* 讓圖標等比例縮放且長寬死鎖為 36px */
 .nav-btn img,
 .nav-btn svg {
@@ -213,6 +250,7 @@ body {
     height: 36px;
     object-fit: contain;
 }
+
 /* 覆蓋掉 glass-effect 的直角，保留圓角效果 */
 .nav-btn.glass-effect {
     border-radius: var(--radius-15);
@@ -223,13 +261,17 @@ body {
  * ========================================================================= */
 .modal-overlay {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 200;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 24px;
-    background: transparent; /* 背景透明，讓點擊區域隱形覆蓋全螢幕 */
+    background: transparent;
+    /* 背景透明，讓點擊區域隱形覆蓋全螢幕 */
 }
 
 .modal-overlay.hidden {
@@ -239,9 +281,12 @@ body {
 .modal-panel {
     width: 100%;
     max-width: 320px;
-    padding: 20px; /* 依據設計規範，浮動視窗統一變體 間距-邊框-20 */
-    border-radius: var(--radius-15); /* 依據設計規範，浮動視窗統一套用變體 圓角-15 */
-    background: transparent; /* 面板底無色，純依賴 glass-effect 與文字 */
+    padding: 20px;
+    /* 依據設計規範，浮動視窗統一變體 間距-邊框-20 */
+    border-radius: var(--radius-15);
+    /* 依據設計規範，浮動視窗統一套用變體 圓角-15 */
+    background: transparent;
+    /* 面板底無色，純依賴 glass-effect 與文字 */
 }
 
 /* =========================================================================
@@ -249,10 +294,12 @@ body {
  * ========================================================================= */
 .detail-view {
     /* 詳情頁固定背景圖片 */
-    background-image: url('../assets/images/色譜-好伴社計藍.png');
-    background-repeat: repeat; /* 開啟圖片無縫重複拼貼 */
-    background-size: 100% auto; /* 寬度 100% 貼齊手機框，高度 auto 保持不變形往下做重複堆疊 */
-    background-position: top center;
+    background-image: url('../assets/images/stores/001-HAP-PEN/color/色譜-好伴社計藍.png');
+    background-repeat: repeat;
+    /* 開啟圖片無縫上下左右重複拼貼 */
+    background-size: auto;
+    /* 維持原始尺寸絕不縮放 */
+    background-position: top left;
     background-attachment: fixed;
     /* 確保這層佈局支援 flex 定位以完整納入 main 的高度 */
     display: flex;
@@ -260,7 +307,8 @@ body {
 }
 
 .detail-main {
-    flex: 1; /* 取代 height: 100% 以避免超出外殼被截斷 */
+    flex: 1;
+    /* 取代 height: 100% 以避免超出外殼被截斷 */
     width: 100%;
     overflow-y: auto;
 }
@@ -269,8 +317,10 @@ body {
     position: sticky;
     top: 0;
     width: 100%;
-    height: var(--space-nav); /* 150px */
-    padding: 0 20px; /* 變體 name "間距-邊框-20" Value 20 */
+    height: var(--space-nav);
+    /* 150px */
+    padding: 0 20px;
+    /* 變體 name "間距-邊框-20" Value 20 */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -283,29 +333,27 @@ body {
     text-align: center;
 }
 
-.detail-header .header-titles .store-name {
-    font-size: 18px; /* 稍微放大 */
-    font-weight: 700;
-}
-
 .hero-section {
     position: relative;
     /* 扣掉 Header 高度，撐開足夠的空間只顯示背景給使用者看 */
     height: 600px;
     width: 100%;
-    pointer-events: none; /* 讓底下背景不要被錯誤遮擋點擊 */
+    pointer-events: none;
+    /* 讓底下背景不要被錯誤遮擋點擊 */
 }
 
 .detail-floating-nav {
     position: absolute;
     right: 20px;
-    top: 50%; /* 位於 Hero 的中央垂直位置 */
+    top: 50%;
+    /* 位於 Hero 的中央垂直位置 */
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
     gap: var(--space-icon-btn);
     z-index: 40;
-    pointer-events: auto; /* 恢復按鈕可點擊 */
+    pointer-events: auto;
+    /* 恢復按鈕可點擊 */
 }
 
 .scroll-arrow {
@@ -322,26 +370,44 @@ body {
 .scroll-arrow img {
     width: 100%;
     height: 100%;
-    transform: rotate(-90deg); /* SVG 原本是返回箭頭，旋轉朝下當做 scroll 箭頭 */
+    transform: rotate(-90deg);
+    /* SVG 原本是返回箭頭，旋轉朝下當做 scroll 箭頭 */
     opacity: 0.7;
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
-    40% { transform: translate(-50%, -10px); }
-    60% { transform: translate(-50%, -5px); }
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    40% {
+        transform: translate(-50%, -10px);
+    }
+
+    60% {
+        transform: translate(-50%, -5px);
+    }
 }
 
 .cards-container {
-    padding: 0 0 80px 0; /* 移除外框左右內距，讓卡片徹底滿版 (w 100%)，維持底部安全留白 */
+    padding: 0 0 80px 0;
+    /* 移除外框左右內距，讓卡片徹底滿版 (w 100%)，維持底部安全留白 */
     display: flex;
     flex-direction: column;
-    gap: 0; /* 卡片完全緊貼，沒有空隙 */
+    gap: 0;
+    /* 卡片完全緊貼，沒有空隙 */
 }
 
 .info-card {
-    padding: 20px; /* 卡片本身的內文距離保持左右 20px */
-    border-radius: 0; /* 為了讓上下完全密合滿版，取消圓角以避免邊緣露空 */
+    padding: 20px;
+    /* 卡片本身的內文距離保持左右 20px */
+    border-radius: 0;
+    /* 為了讓上下完全密合滿版，取消圓角以避免邊緣露空 */
     /* 玻璃效果的內外陰影會在相連處自然形成立體感分界線 */
 }
 
@@ -366,7 +432,8 @@ body {
 .photo-placeholder {
     width: 100%;
     height: 200px;
-    border-radius: 8px; /* 極簡圓角供暫代照片使用 */
+    border-radius: 8px;
+    /* 極簡圓角供暫代照片使用 */
     background-size: cover;
     background-position: center;
     margin-bottom: 12px;
@@ -417,12 +484,16 @@ body {
  * ========================================================================= */
 .toast-overlay {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 300;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent; /* 背景透明以允許背後看見但攔截點擊 */
+    background: transparent;
+    /* 背景透明以允許背後看見但攔截點擊 */
 }
 
 .toast-overlay.hidden {
@@ -430,9 +501,12 @@ body {
 }
 
 .toast-panel {
-    padding: 20px; /* 依據設計規範，浮動視窗統一變體 間距-邊框-20 */
-    border-radius: var(--radius-15); /* 依據設計規範，浮動視窗統一套用變體 圓角-15 */
-    background: transparent; /* 面板底無色，純依賴 glass-effect 與文字 */
+    padding: 20px;
+    /* 依據設計規範，浮動視窗統一變體 間距-邊框-20 */
+    border-radius: var(--radius-15);
+    /* 依據設計規範，浮動視窗統一套用變體 圓角-15 */
+    background: transparent;
+    /* 面板底無色，純依賴 glass-effect 與文字 */
     text-align: center;
 }
 
@@ -442,7 +516,8 @@ body {
 
 .full-modal-scroll {
     width: 100%;
-    max-width: none !important; /* 強制覆蓋 .modal-panel 的 400px 限制 */
+    max-width: none !important;
+    /* 強制覆蓋 .modal-panel 的 400px 限制 */
     height: 100vh;
     border-radius: 0;
     margin: 0;
@@ -463,7 +538,8 @@ body {
 
 .share-form {
     width: 100%;
-    max-width: none; /* W滿版 */
+    max-width: none;
+    /* W滿版 */
     margin: 0 auto;
     color: #111;
 }
@@ -510,7 +586,7 @@ body {
     margin-bottom: 4px;
 }
 
-.form-group input[type="text"], 
+.form-group input[type="text"],
 .form-group textarea {
     width: 100%;
     background: rgba(255, 255, 255, 0.4);
@@ -525,7 +601,8 @@ body {
     flex: 1;
 }
 
-.form-group input:focus, .form-group textarea:focus {
+.form-group input:focus,
+.form-group textarea:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.6);
 }
