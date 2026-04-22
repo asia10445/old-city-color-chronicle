@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主題相機 - 中興新村省府生活色譜</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/app-logo.svg">
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="主題相機 - 中興新村省府生活色譜">
+    <meta property="og:description" content="記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。">
+    <meta property="og:image" content="./assets/images/og-image.jpg">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        .camera-view {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background-color: #000;
+            overflow: hidden;
+            display: block;
+            /* 移除 flex 讓 absolute 完全掌控 */
+        }
+
+        /* 影片視訊預覽滿版墊底 */
+        #camera-stream {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* 背景圖騰共用設定 — background-image 由 JS 動態載入 */
+        .c-overlay {
+            position: absolute;
+            z-index: 10;
+            background-repeat: repeat;
+            /* 將 4500px 寬大圖縮放為 900px，使 250px 單位縮為 50px 適合手機 */
+            background-size: 900px auto;
+            /* 預設載入一張作為 fallback */
+            background-image: url('./assets/images/stores/001-HAPPEN/palette/001-HAPPEN-palette-main.png');
+        }
+
+        /* 按鈕共用設定 */
+        .btn-back {
+            padding: 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-back img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn-capture {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .action-btn {
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #111;
+            border: none;
+            cursor: pointer;
+            height: 60px;
+            border-radius: var(--radius-15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 隱藏區塊用 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* =========================================================================
+         * 直向佈局 (Portrait - Default)
+         * ========================================================================= */
+        @media (orientation: portrait) {
+
+            .c-overlay.left,
+            .c-overlay.right,
+            .c-overlay.bar {
+                display: none;
+            }
+
+            .c-overlay.top {
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 140px;
+            }
+
+            .c-overlay.bottom {
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 220px;
+            }
+
+            /* 色譜圖片中顏色較淡的部分是加一個陰影疊加在圖層上方 */
+            .c-overlay.bottom::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 140px;
+                background: rgba(255, 255, 255, 0.45);
+                pointer-events: none;
+            }
+
+            /* 預設拍照畫面按鈕位置 */
+            #state-capture .btn-back {
+                position: absolute;
+                bottom: 40px;
+                left: 32px;
+                z-index: 20;
+            }
+
+            #state-capture .btn-capture {
+                position: absolute;
+                bottom: 34px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 20;
+            }
+
+            /* 確認畫面按鈕位置 */
+            #state-confirm {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 140px;
+                z-index: 20;
+                display: flex;
+                align-items: center;
+                padding: 0 32px;
+                gap: 12px;
+            }
+
+            #state-confirm .btn-back {
+                margin-right: auto;
+            }
+
+            #state-confirm .btn-cancel {
+                width: 72px;
+            }
+
+            #state-confirm .btn-confirm {
+                width: 144px;
+                /* 取消按鈕的兩倍大 */
+                flex: none;
+                max-width: none;
+            }
+        }
+
+        /* =========================================================================
+         * 橫向佈局 (Landscape)
+         * ========================================================================= */
+        @media (orientation: landscape) {
+
+            .c-overlay.top,
+            .c-overlay.bottom {
+                display: none;
+            }
+
+            .c-overlay.left {
+                left: 0;
+                top: 0;
+                width: 140px;
+                height: 100%;
+            }
+
+            .c-overlay.right {
+                right: 0;
+                top: 0;
+                width: 140px;
+                height: 100%;
+            }
+
+            /* 色譜圖片中顏色較淡的部分是加一個陰影疊加在圖層上方 */
+            .c-overlay.left::after,
+            .c-overlay.right::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.45);
+                pointer-events: none;
+            }
+
+            .c-overlay.bar {
+                bottom: 0;
+                left: 140px;
+                right: 140px;
+                height: 60px;
+            }
+
+            /* 預設拍照畫面按鈕位置 */
+            #state-capture .btn-back {
+                position: absolute;
+                bottom: 32px;
+                left: 40px;
+                z-index: 20;
+            }
+
+            #state-capture .btn-capture {
+                position: absolute;
+                top: 50%;
+                right: 30px;
+                transform: translateY(-50%);
+                z-index: 20;
+            }
+
+            /* 確認畫面按鈕位置 */
+            #state-confirm {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 20;
+            }
+
+            #state-confirm .btn-back {
+                position: absolute;
+                bottom: 32px;
+                left: 40px;
+            }
+
+            /* 在橫向時，確認與取消按鈕置於垂直置中，並留有間距 */
+            #state-confirm .btn-cancel {
+                position: absolute;
+                bottom: calc(50% + 6px);
+                right: 34px;
+                width: 72px;
+                height: 72px;
+            }
+
+            #state-confirm .btn-confirm {
+                position: absolute;
+                top: calc(50% + 6px);
+                right: 34px;
+                width: 72px;
+                height: 144px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="camera-view">
+        <!-- 攝影機即時畫面 -->
+        <video id="camera-stream" autoplay playsinline></video>
+
+        <!-- 移除色譜圖騰疊層，只保留半透明按鈕 -->
+
+        <!-- 【狀態一】: 預設拍照介面 -->
+        <div id="state-capture">
+            <button class="nav-btn glass-effect btn-back" aria-label="返回" onclick="history.back()">
+                <img src="./assets/icons/back.svg" alt="Back">
+            </button>
+            <div class="btn-capture glass-effect" id="capture-btn" onclick="capturePhoto()"></div>
+        </div>
+
+        <!-- 【狀態二】: 拍照確認介面 -->
+        <div id="state-confirm" class="hidden">
+            <button class="nav-btn glass-effect btn-back" aria-label="返回" onclick="cancelPhoto()">
+                <img src="./assets/icons/back.svg" alt="Back">
+            </button>
+            <button class="action-btn glass-effect btn-cancel" onclick="cancelPhoto()">取消</button>
+            <button class="action-btn glass-effect btn-confirm" onclick="savePhoto()">確認</button>
+        </div>
+
+        <!-- 【狀態三】: 生成載入中 (Loading) -->
+        <div id="state-loading" class="hidden"
+            style="position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 100; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background-color: rgba(255, 255, 255, 0.25);">
+            <h2 class="title-32-48" style="color: #222;">圖騰生成中</h2>
+        </div>
+    </div>
+
+    <!-- (原用來載入資料庫色譜圖框的 JS 已移除) -->
+
+    <script>
+        const video = document.getElementById('camera-stream');
+        const stateCapture = document.getElementById('state-capture');
+        const stateConfirm = document.getElementById('state-confirm');
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" }
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("無法存取相機:", err);
+            }
+        }
+
+        startCamera();
+
+        // 拍照：凍結畫面並切換至確認模式
+        function capturePhoto() {
+            video.pause();
+            stateCapture.classList.add('hidden');
+            stateConfirm.classList.remove('hidden');
+        }
+
+        // 取消：恢復鏡頭並切換回拍照模式
+        function cancelPhoto() {
+            video.play();
+            stateConfirm.classList.add('hidden');
+            stateCapture.classList.remove('hidden');
+        }
+
+        // 確認：執行儲存、顯示防呆載入畫面、然後跳轉
+        function savePhoto() {
+            // 隱藏目前操作列
+            stateConfirm.classList.add('hidden');
+            // 秀出全螢幕高斯模糊的載入畫面
+            document.getElementById('state-loading').classList.remove('hidden');
+
+            try {
+                // 實裝真正的拍照擷取
+                const canvas = document.createElement('canvas');
+                // 縮放尺寸避免直接塞入幾 MB 照片導致 sessionStorage 爆掉 (QuotaExceededError)
+                const MAX_WIDTH = 1200;
+                let w = video.videoWidth || 1080;
+                let h = video.videoHeight || 1920;
+                
+                if (w > MAX_WIDTH) {
+                    h = Math.floor(h * (MAX_WIDTH / w));
+                    w = MAX_WIDTH;
+                }
+                
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, w, h);
+                
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.85); // 0.85 壓縮比
+                sessionStorage.setItem('uploadedImage', dataUrl);
+            } catch (err) {
+                console.error("無法將畫面存入 session", err);
+            }
+
+            // 跳轉時也帶上 shop ID，並且標示 upload=1 讓成果頁知道要覆蓋圖片
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const targetUrl = id ? `result.html?id=${id}&upload=1` : 'result.html?upload=1';
+
+            // 模擬處理時間後跳轉至分析成果頁面
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 800);
+        }
+    </script>
+</body>
+
+</html>

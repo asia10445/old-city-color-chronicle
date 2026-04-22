@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>好伴社計藍 - 中興新村省府生活色譜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/app-logo.svg">
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="好伴社計藍 - 中興新村省府生活色譜">
+    <meta property="og:description" content="記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。">
+    <meta property="og:image" content="./assets/images/og-image.jpg">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="app-container detail-view">
+        <!-- 頂部導覽列 (150px 高, 20px 邊框間距) -->
+        <header class="detail-header glass-effect">
+            <button class="nav-btn glass-effect" onclick="window.location.href='index.html'" aria-label="回首頁">
+                <img src="./assets/icons/home.svg" alt="Home">
+            </button>
+            <div class="header-titles">
+                <h1 class="store-name">好伴社計藍</h1>
+                <div class="code-text body-14-21">TC-2026-03-24-01</div>
+            </div>
+            <button class="nav-btn glass-effect" aria-label="色票組成元素" onclick="window.location.href='detail-element.html'">
+                <img src="./assets/icons/swatch.svg" alt="Swatch">
+            </button>
+        </header>
+
+        <!-- 右側專屬浮動導覽 (地圖、相機、下載) 將此獨立於捲動區外保持固定 -->
+        <nav class="detail-floating-nav">
+            <button class="nav-btn glass-effect" aria-label="地圖" onclick="window.open('https://www.google.com/maps/search/?api=1&query=南投市中區綠川西街135號好伴社計', '_blank')">
+                <img src="./assets/icons/location.svg" alt="Location">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="拍照" onclick="window.location.href='camera.html'"><img src="./assets/icons/camera.svg" alt="Camera"></button>
+            <button class="nav-btn glass-effect" aria-label="下載"><img src="./assets/icons/download.svg" alt="Download"></button>
+        </nav>
+
+        <!-- 主內容捲動區 -->
+        <main class="detail-main">
+            <!-- Hero區段：純秀背景 -->
+            <div class="hero-section">
+                <!-- 提示往下滑動的箭頭 -->
+                <div class="scroll-arrow">
+                    <img src="./assets/icons/back.svg" alt="Scroll Down">
+                </div>
+            </div>
+
+            <!-- 內文各個獨立卡片展示區 -->
+            <div class="cards-container">
+                
+                <!-- 卡片 1：Slogan -->
+                <section id="card-slogan" class="info-card glass-effect center-align">
+                    <h2 class="title-bold" style="margin-bottom: 8px;" id="slogan-shop-name">好伴社計</h2>
+                    <p class="body-12-18" id="slogan-text">讓每一個人都成為<br>改變社會的實踐者</p>
+                </section>
+
+                <!-- 卡片 2：聯絡資訊 -->
+                <section id="card-contact" class="info-card glass-effect center-align">
+                    <div class="contact-info body-12-18">
+                        <div id="contact-address">南投市中區民族路35號</div>
+                        <div id="contact-phone">04 2223 1312</div>
+                        <div id="contact-email">happenxdesign@gmail.com</div>
+                        <div id="contact-website">happen.tw</div>
+                    </div>
+                </section>
+
+                <!-- 卡片 3：理念與文字 -->
+                <section id="card-philosophy" class="info-card glass-effect">
+                    <h3 class="section-title" id="philosophy-title">從自身經驗出發持續投入的地方</h3>
+                    <p class="body-12-18" id="philosophy-text" style="white-space: pre-wrap;">
+                        扎根在南投中舊市區的設計事務所，透過「社會設計」引導眾人一起投入具公共性的行動，創造社會價值，讓每一個人都能成為改變社會的實踐者。<br><br>
+                        以地方觀察與文化轉譯為核心，轉化街區日常、老店故事與市場元素轉化為設計商品與視覺內容。展現中興新村獨有的生活氛圍與歷史感。
+                    </p>
+                </section>
+
+                <!-- 卡片 4：時光故事 -->
+                <section id="card-photos" class="info-card glass-effect center-align">
+                    <h3 class="section-title" style="text-align: center;">時光故事</h3>
+                    <div id="photos-container">
+                        <!-- 照片動態載入區 -->
+                    </div>
+                </section>
+
+
+                
+            </div>
+        </main>
+
+        <!-- 下載完成訊息視窗 -->
+        <div id="download-toast" class="toast-overlay hidden" onclick="this.classList.add('hidden')">
+            <div class="toast-panel glass-effect">
+                <span class="body-16-24" style="white-space: nowrap;">色譜 <span id="download-shop-name">好伴社計藍</span> 已下載</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/detail.js"></script>
+</body>
+</html>
+

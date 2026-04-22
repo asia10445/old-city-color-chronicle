@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南投時光地圖 - 中興新村省府生活色譜</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/app-logo.svg">
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="南投時光地圖 - 中興新村省府生活色譜">
+    <meta property="og:description" content="記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。">
+    <meta property="og:image" content="./assets/images/og-image.jpg">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <style>
+        .map-section {
+            padding: 60px 32px;
+            text-align: center;
+        }
+
+        .map-section img.static-map {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            /* 暫時代替 Google Maps 圖片 */
+            border-radius: var(--radius-15);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-modal);
+        }
+
+        .map-section h3 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #111;
+        }
+
+        .map-section p {
+            color: #111;
+            text-align: justify;
+            text-align-last: center;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        /* 簡單的假圖釘動畫 */
+        .pin {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+            }
+
+            70% {
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container" style="background: #FDFDFD;">
+
+        <!-- 頂端玻璃標題 -->
+        <header class="app-header glass-effect" style="position: absolute; top: 0; z-index: 50; margin-bottom: 0;">
+            <h1 class="title-32-48">色譜地圖</h1>
+        </header>
+
+        <!-- 首頁無字距南投 -->
+
+        <!-- 內容滾動區 -->
+        <div style="height: 100%; overflow-y: auto; padding-top: 150px; padding-bottom: 80px;">
+
+            <div style="padding: 24px; text-align: center; margin-bottom: 24px;">
+                <h3
+                    style="font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; margin-bottom: 16px;">
+                    採集南投的時光色調</h3>
+                <p class="body-12-18" style="color:#444; line-height: 1.8;">
+                    每一條街道，都藏著一段不曾褪色的故事。<br>點擊色彩，聽聽那些關於土地、歷史與生活的真實聲音。<br>看見這座城市最溫暖的色彩分佈。</p>
+            </div>
+
+            <!-- 大型總覽地圖 -->
+            <div id="main-map-section" class="map-section" style="padding-top: 0;">
+                <div
+                    style="position: relative; width: 100%; height: 50vh; min-height: 350px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); overflow: hidden; filter: grayscale(0.2) contrast(1.1); z-index: 10;">
+                    <div id="main-map" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- 動態店家地圖區塊（由 JS 從資料庫載入） -->
+            <div id="shops-map-container">
+                <div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">載入店家地圖中...</div>
+            </div>
+
+        </div> <!-- 結束內容滾動區 -->
+
+        <!-- 右側浮動導覽列 -->
+        <nav class="floating-nav">
+            <button class="nav-btn glass-effect" aria-label="詳細資訊"
+                onclick="document.getElementById('info-modal').classList.remove('hidden')">
+                <img src="./assets/icons/info.svg" alt="Info">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="搜尋"
+                onclick="document.getElementById('search-modal').classList.remove('hidden'); setTimeout(()=>document.getElementById('search-input-field').focus(), 100);">
+                <img src="./assets/icons/search.svg" alt="Search">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="瀑布" onclick="window.location.href='index.html'">
+                <img src="./assets/icons/layout.svg" alt="Layout">
+            </button>
+        </nav>
+
+        <!-- 資訊說明模態視窗 -->
+        <div id="info-modal" class="modal-overlay hidden" onclick="this.classList.add('hidden')">
+            <div class="modal-panel glass-effect" onclick="event.stopPropagation()">
+                <h2 class="store-name" style="text-align:center; margin-bottom: 24px;">關於中興新村省府生活色譜</h2>
+                <div class="body-12-18" style="display: flex; flex-direction: column; gap: 16px;">
+                    <p style="font-weight:700;">「時光的顏色，是有觸感的。」</p>
+                    <p>我們走進中興新村，記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。</p>
+                    <div style="line-height:1.6;">
+                        <p>圖騰組成邏輯</p>
+                        <p>核心紋理 | 材料的肌理流動</p>
+                        <p>幾何節奏 | 空間的排列秩序</p>
+                        <p>歲月斑駁 | 時間的使用痕跡</p>
+                    </div>
+                    <div style="line-height:1.6;">
+                        <p>採集單位：好伴社計</p>
+                        <p>更新日期：2026.04.07</p>
+                        <p>地點：中興新村時光標本庫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜尋器浮動視窗 -->
+        <div id="search-modal" class="modal-overlay hidden" style="z-index: 200;"
+            onclick="this.classList.add('hidden')">
+            <div class="glass-effect"
+                style="border-radius: var(--radius-15); padding: 12px; width: 85%; max-width: 360px; display: flex; align-items: center; background: transparent;"
+                onclick="event.stopPropagation()">
+                <input id="search-input-field" type="text" class="glass-effect" placeholder="搜尋色譜或店家名稱..."
+                    style="width: 100%; border: none; outline: none; border-radius: 34px; padding: 16px 24px; font-family: 'Noto Sans TC', sans-serif; font-size: 16px; color: #111; background: transparent;">
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script type="module">
+        // ==========================================
+        // 從資料庫載入店家座標，動態產生地圖區塊
+        // ==========================================
+        const container = document.getElementById('shops-map-container');
+
+        // 初始化 Leaflet 地圖 (預設中心: 南投市中區)
+        const map = L.map('main-map').setView([24.137, 120.683], 14);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(map);
+        let markersGroup = L.layerGroup().addTo(map);
+
+        // 預備一組柔和色彩輪替，作為各店家區塊背景色
+        const bgColors = ['#8FD8D8', '#FFEA00', '#FFB6C1', '#A8FADF', '#C084FC', '#FCD553', '#87CEEB', '#F0E68C'];
+
+        function renderMapSections(dataArray) {
+            container.innerHTML = '';
+            markersGroup.clearLayers(); // 清除舊的地標
+
+            if (!dataArray || dataArray.length === 0) {
+                container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">查無店家結果</div>';
+                return;
+            }
+
+            const bounds = L.latLngBounds();
+
+            dataArray.forEach((shop) => {
+                let colorHex = '#666';
+                let bgColor = '#E0E0E0';
+                if (shop.color) {
+                    colorHex = shop.color.startsWith('#') ? shop.color : `#${shop.color}`;
+                    bgColor = colorHex;
+                }
+
+                // 在大地圖上加入標記
+                if (shop.lat && shop.lng) {
+                    const latLng = [shop.lat, shop.lng];
+                    bounds.extend(latLng);
+
+                    // 自訂圓點顏色圖示
+                    const iconHtml = `<div style="width: 16px; height: 16px; background-color: ${colorHex}; border-radius: 50%; box-shadow: 0 0 0 3px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.3); border: 1px solid rgba(0,0,0,0.1);"></div>`;
+                    const customIcon = L.divIcon({
+                        className: 'custom-pin',
+                        html: iconHtml,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10],
+                        popupAnchor: [0, -10]
+                    });
+
+                    const marker = L.marker(latLng, { icon: customIcon }).addTo(markersGroup);
+                    const mapQuery = encodeURIComponent((shop.address || '') + ' ' + (shop.name || ''));
+                    const popupHtml = `
+                        <div style="line-height: 1.5; font-size: 14px;">
+                            <strong style="color:#111;">${shop.name}</strong><br>
+                            <a href="detail.html?id=${shop.id}" style="color: #0066cc; text-decoration: underline;">查看色譜</a>
+                            <span style="color: #ccc; margin: 0 6px;">|</span>
+                            <a href="https://www.google.com/maps/search/?api=1&query=${mapQuery}" target="_blank" style="color: #0066cc; text-decoration: underline;">開啟地圖</a>
+                        </div>
+                    `;
+                    marker.bindPopup(popupHtml, { closeButton: false });
+                }
+
+                const section = document.createElement('div');
+                section.className = 'map-section';
+                section.style.backgroundColor = bgColor;
+                section.style.cursor = 'pointer';
+                section.style.transition = 'opacity 0.2s';
+                section.addEventListener('click', () => {
+                    window.location.href = `detail.html?id=${shop.id}`;
+                });
+                section.addEventListener('mouseover', () => section.style.opacity = '0.9');
+                section.addEventListener('mouseout', () => section.style.opacity = '1');
+
+                section.innerHTML = `
+                    <h3 style="margin-bottom: 8px;">${shop.name}</h3>
+                    ${shop.slogan ? `<p class="body-12-18" style="margin-bottom: 24px;">${shop.slogan}</p>` : ''}
+                    <div style="position: relative; width: 100%; height: 220px; border-radius: var(--radius-15); box-shadow: var(--shadow-modal); background: #e0e0e0; overflow: hidden; filter: grayscale(0.5) contrast(1.2);">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                            src="https://maps.google.com/maps?q=${shop.lat},${shop.lng}&t=&z=17&ie=UTF8&iwloc=&output=embed"></iframe>
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+
+            // 調整地圖視野包覆所有標記
+            if (dataArray.length > 0 && bounds.isValid()) {
+                map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
+            }
+        }
+
+        try {
+            const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+            const supabase = createClient(
+                'https://ccqcmzsopezfmmmvlqlr.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcWNtenNvcGV6Zm1tbXZscWxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTE4NjUsImV4cCI6MjA5MDk4Nzg2NX0.v2T_HyAYnwW2wSNBYVUdtRCDMTyffIFQ5nU-JLwvMI4'
+            );
+
+            const { data, error } = await supabase
+                .from('shops')
+                .select('id, name, slogan, address, lat, lng, color')
+                .not('lat', 'is', null)
+                .not('lng', 'is', null);
+
+            if (error) {
+                console.warn('地圖資料載入失敗', error.message);
+                container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">地圖資料載入失敗</div>';
+            } else if (data && data.length > 0) {
+                window.allMapShopsData = data;
+                renderMapSections(data);
+            } else {
+                container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">尚無店家地圖資料</div>';
+            }
+        } catch (err) {
+            console.warn('Supabase 載入失敗', err);
+            container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">地圖資料載入失敗</div>';
+        }
+
+        // 搜尋器邏輯
+        const searchInput = document.getElementById('search-input-field');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                if (!window.allMapShopsData) return;
+                const query = e.target.value.trim().toLowerCase();
+                const mainMapEl = document.getElementById('main-map-section');
+
+                if (!query) {
+                    if (mainMapEl) mainMapEl.style.display = '';
+                    renderMapSections(window.allMapShopsData);
+                } else {
+                    const filtered = window.allMapShopsData.filter(shop => {
+                        const nameMatch = shop.name && shop.name.toLowerCase().includes(query);
+                        const sloganMatch = shop.slogan && shop.slogan.toLowerCase().includes(query);
+                        const addressMatch = shop.address && shop.address.toLowerCase().includes(query);
+                        return nameMatch || sloganMatch || addressMatch;
+                    });
+
+                    if (filtered.length > 0) {
+                        if (mainMapEl) mainMapEl.style.display = '';
+                    } else {
+                        if (mainMapEl) mainMapEl.style.display = 'none';
+                    }
+                    renderMapSections(filtered);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

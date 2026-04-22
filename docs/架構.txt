@@ -1,0 +1,4 @@
+設計：Figma  
+AI寫程式：Claude / ChatGPT / v0  
+資料庫：Supabase  
+部署（上線）：Vercel

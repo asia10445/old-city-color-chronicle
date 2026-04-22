@@ -1,0 +1,77 @@
+﻿Variables
+
+文字
+name "內文-12/18" Noto Sans TC Regular 字級12 行距18
+name "標籤" Noto Sans TC  BOLD 字級14 行距21
+name "按鈕" Noto Sans TC  BOLD 字級14 行距21
+name "內文-14/21" Noto Sans TC Regular 字級14 行距21
+name "內文-16/24" Noto Sans TC Regular 字級16 行距24
+name "店家名稱" Noto Sans TC Medium 字級18 行距27
+name "標題-24/36" Noto Serif TC BOLD 字級24 行距36
+name "標題-28/42" Noto Serif TC BOLD 字級28 行距42
+name "標題-32/48" Noto Serif TC BOLD 字級32 行距48
+
+COLLECTIONS "原始語意"
+ 
+群組"色票"
+name "中興新村黑" 色碼1A1A1A
+name "中興新村黑-透明度50"  Value #1A1A1A 透明度50
+name "時光白" 色碼FFFFFF
+name "時光白-透明度50" Value #FFFFFF 透明度50
+
+群組"圓角"
+name "圓角-12"  Value 12
+name "圓角-15"  Value 15
+
+群組"間距"
+name "間距-0"  Value 0
+name "間距-4"  Value 4
+name "間距-8"  Value 8
+name "間距-12"  Value 12
+name "間距-15"  Value 15
+name "間距-20"  Value 20
+name "間距-40"  Value 40
+name "間距-150"  Value 150
+
+
+COLLECTIONS "命名語意"
+
+群組"顏色"
+name "文字"  Value 色票/中興新村黑 
+name "文字-提示輸入"  Value 色票/中興新村黑-透明度50
+name "ICON"  Value 色票/中興新村黑
+
+群組"間距"
+name "間距-色票標題"  Value 間距/間距-0
+name "間距-色碼"  Value 間距/間距-4
+name "間距-色票標示"  Value 間距/間距-8
+name "間距-拍照UI"  Value 間距/間距-8
+name "間距-邊框-8"  Value 間距/間距-8
+name "間距-文字"  Value 間距/間距-12
+name "間距-ICON-按鈕"  Value 間距/間距-12
+name "間距-15"  Value 間距/間距-15
+name "間距-邊框-20"  Value 間距/間距-20
+name "間距-邊框-40"  Value 間距/間距-40
+name "間距-照片邊框"  Value 間距/間距-40
+name "間距-導覽列-首頁"  Value 間距/間距-125
+name "間距-導覽列"  Value 間距/間距-150
+
+有應用到的陰影效果 有磨砂玻璃效果的都是以這個為基礎，下面複數效果是同一個物件的陰影：
+
+Fill
+FFFFFF 25%
+171717 100%
+8C8C8C 25%
+
+Effects
+inner shadow x3 y3 blur0.5 spread -3.5 ffffff 100%
+inner shadow x0 y0 blur8 spread0 f2f2f2 100%
+drop shadow x0 y0 blur2 spread0 000000 10%
+drop shadow x0 y1 blur8 spread0  000000 10%
+background  Uniform  blur12
+
+
+
+
+
+

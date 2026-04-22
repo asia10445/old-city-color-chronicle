@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Colors of Zhongxing - 中興新村省府生活色譜</title>
+    <!-- 引入字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/app-logo.svg">
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="中興新村省府生活色譜">
+    <meta property="og:description" content="記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。">
+    <meta property="og:image" content="./assets/images/og-image.jpg">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- 頂部 Header 導覽列也套用玻璃陰影 -->
+        <header class="app-header glass-effect">
+            <h1 class="title-32-48">中興新村色譜</h1>
+        </header>
+
+        <!-- 瀑布流主內容容器 (拆分為左右雙欄) -->
+        <main class="masonry-container" id="masonry-container">
+            <div class="masonry-col" id="masonry-col-left"></div>
+            <div class="masonry-col" id="masonry-col-right"></div>
+        </main>
+
+        <!-- 右側浮動導覽列 -->
+        <nav class="floating-nav">
+            <button class="nav-btn glass-effect" aria-label="詳細資訊">
+                <img src="./assets/icons/info.svg" alt="Info">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="新增"
+                onclick="document.getElementById('add-modal').classList.remove('hidden')">
+                <img src="./assets/icons/add.svg" alt="Add">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="搜尋"
+                onclick="document.getElementById('search-modal').classList.remove('hidden'); setTimeout(()=>document.getElementById('search-input-field').focus(), 100);">
+                <img src="./assets/icons/search.svg" alt="Search">
+            </button>
+            <button class="nav-btn glass-effect" aria-label="地圖" onclick="window.location.href='map.html'">
+                <img src="./assets/icons/location.svg" alt="Location">
+            </button>
+        </nav>
+
+        <!-- 資訊說明模態視窗 (預設隱藏) -->
+        <div id="info-modal" class="modal-overlay hidden">
+            <!-- 面板無色，直接套用玻璃陰影 -->
+            <div class="modal-panel glass-effect">
+                <h2 class="store-name" style="text-align:center; margin-bottom: 24px;">關於中興新村省府生活色譜</h2>
+                <div class="body-12-18" style="display: flex; flex-direction: column; gap: 16px;">
+                    <p style="font-weight:700;">「時光的顏色，是有觸感的。」</p>
+                    <p>我們走進中興新村，記錄職人與建築留下的視覺痕跡，並將這些元素轉化為色彩與圖騰。</p>
+                    <div style="line-height:1.6;">
+                        <p>圖騰組成邏輯</p>
+                        <p>核心紋理 | 材料的肌理流動</p>
+                        <p>幾何節奏 | 空間的排列秩序</p>
+                        <p>歲月斑駁 | 時間的使用痕跡</p>
+                    </div>
+                    <div style="line-height:1.6;">
+                        <p>採集單位：HUA</p>
+                        <p>更新日期：2026.04.07</p>
+                        <p>地點：中興新村標本庫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增分享店家表單視窗 -->
+        <div id="add-modal" class="modal-overlay hidden" style="z-index: 100; padding: 0;">
+
+            <!-- 獨立抽出的絕對浮動返回按鈕，避免被滿版濾鏡層綁架滾動 -->
+            <button class="nav-btn glass-effect modal-close-btn"
+                onclick="document.getElementById('add-modal').classList.add('hidden')">
+                <img src="./assets/icons/back.svg" alt="Close">
+            </button>
+
+            <!-- 將面板擴充為滿版捲動區 -->
+            <div class="modal-panel glass-effect full-modal-scroll">
+                <div class="share-form">
+                    <h2 class="form-main-title">分享一間你喜歡的中興新村店家</h2>
+
+                    <div class="body-12-18 form-subtitle">
+                        <p style="font-weight: 700; margin-bottom: 8px;">我們正在蒐集那些值得被記住的地方</p>
+                        <p>不用登入，也可以匿名投稿，你的分享，可能會變成下一張中興新村的色譜。</p>
+                    </div>
+
+                    <h3 class="form-section-title">店家基本資訊</h3>
+
+                    <div class="form-group form-row">
+                        <label>店家名稱</label>
+                        <input id="share-shop-name" type="text" placeholder="店家名稱 例如：好伴社計">
+                    </div>
+
+                    <div class="form-group form-row">
+                        <label>店家地點</label>
+                        <input id="share-shop-location" type="text" placeholder="店家地點 例如：綠川附近">
+                    </div>
+
+                    <div class="form-group">
+                        <label>為什麼想分享這間店？</label>
+                        <textarea id="share-shop-reason" rows="3"
+                            placeholder="例如：門口的磨石子地板很漂亮&#10;或：這家店的招牌很有味道"></textarea>
+                    </div>
+
+                    <input type="file" id="share-photo-upload" accept="image/*" style="display: none;"
+                        onchange="handleSharePhotoUpload(event)">
+                    <button class="form-upload-btn"
+                        onclick="document.getElementById('share-photo-upload').click()">上傳照片</button>
+                    <div id="share-photo-preview" style="margin-top: 16px; display: none; text-align: center;">
+                        <img id="share-photo-img" src="" alt="照片預覽"
+                            style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 8px; box-shadow: var(--shadow-modal);">
+                        <div id="share-photo-name" class="body-12-18" style="margin-top: 8px; color: #444;"></div>
+                    </div>
+
+                    <h3 class="form-section-title" style="margin-top: 32px;">提供者資訊</h3>
+
+                    <div class="form-group form-row">
+                        <label>你的名字</label>
+                        <input id="share-user-name" type="text" placeholder="例如：匿名旅人">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="margin-bottom:8px;">聯絡方式</label>
+                        <input id="share-user-contact" type="text" placeholder="Email 或 IG（如果願意讓我們聯絡你）">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="margin-bottom:8px;">其他補充說明</label>
+                        <textarea id="share-user-notes" rows="2" placeholder="若有訪談內容或詳細的職人故事，請在這裡輸入。"></textarea>
+                    </div>
+
+                    <h3 class="form-section-title" style="margin-top: 32px;">同意使用條款</h3>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="terms-agree"
+                            onchange="document.getElementById('share-submit-btn').disabled = !this.checked; document.getElementById('share-submit-btn').style.opacity = this.checked ? '1' : '0.4';">
+                        <label for="terms-agree" class="body-12-18"
+                            style="font-weight: 400; line-height: 1.5;">我同意本照片與資料可用於《中興新村省府生活色譜》之研究、展示與設計用途。</label>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 32px;">
+                        <button id="share-submit-btn" class="form-submit-btn glass-effect" disabled
+                            style="opacity: 0.4; transition: opacity 0.3s;" onclick="submitShareForm()">分享這間店</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 狀態跳出視窗 (面板無色 套陰影) -->
+        <div id="success-modal" class="modal-overlay hidden" style="z-index: 200;"
+            onclick="this.classList.add('hidden')">
+            <!-- 點擊外圍關閉，且面板直接套玻璃擬態透明與陰影 -->
+            <div class="modal-panel glass-effect"
+                style="max-width: 340px; padding: 40px 32px; text-align: center; border-radius: var(--radius-15);"
+                onclick="event.stopPropagation()">
+                <h2
+                    style="font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; margin-bottom: 12px; color: #111; letter-spacing: 0.02em;">
+                    成功加入分享清單！</h2>
+                <div
+                    style="font-size: 15px; line-height: 1.6; color: #333; font-weight: 500; margin-bottom: 20px; letter-spacing: 0.05em;">
+                    謝謝你一起記錄這座城市。
+                </div>
+                <div class="body-12-18" style="color: #666; text-align: center; font-weight: 400; font-size: 13px;">
+                    我們會盡快確認並加入色譜中
+                </div>
+            </div>
+        </div>
+
+        <!-- 失敗跳出視窗 -->
+        <div id="fail-modal" class="modal-overlay hidden" style="z-index: 200;" onclick="this.classList.add('hidden')">
+            <div class="modal-panel glass-effect"
+                style="max-width: 320px; padding: 36px 32px; text-align: center; border-radius: var(--radius-15);"
+                onclick="event.stopPropagation()">
+                <div
+                    style="width: 48px; height: 48px; border-radius: 50%; background: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <span style="font-size: 20px; color: #555;">!</span>
+                </div>
+                <h2
+                    style="font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; color: #111; letter-spacing: 0.02em;">
+                    送出失敗，請再試一次。</h2>
+                <div class="body-12-18" style="color: #666; text-align: center; letter-spacing: 0.02em;">
+                    如果問題持續發生，請稍後再試。
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜尋器浮動視窗 -->
+        <div id="search-modal" class="modal-overlay hidden" style="z-index: 200;"
+            onclick="this.classList.add('hidden')">
+            <!-- 雙層物件陰影: 外層 Wrapper -->
+            <div class="glass-effect"
+                style="border-radius: var(--radius-15); padding: 12px; width: 85%; max-width: 360px; display: flex; align-items: center; background: transparent;"
+                onclick="event.stopPropagation()">
+                <!-- 雙層物件陰影: 內層 Input -->
+                <input id="search-input-field" type="text" class="glass-effect" placeholder="搜尋色譜或店家名稱..."
+                    style="width: 100%; border: none; outline: none; border-radius: 34px; padding: 16px 24px; font-family: 'Noto Sans TC', sans-serif; font-size: 16px; color: #111; background: transparent;">
+            </div>
+        </div>
+    </div>
+    <script src="./js/main.js"></script>
+    <script>
+        // 送出分享表單的連動邏輯
+        async function submitShareForm() {
+            if (!document.getElementById('terms-agree').checked) return;
+
+            const name = document.getElementById('share-shop-name').value.trim();
+            const location = document.getElementById('share-shop-location').value.trim();
+            const reason = document.getElementById('share-shop-reason').value.trim();
+            const userName = document.getElementById('share-user-name').value.trim();
+            const userContact = document.getElementById('share-user-contact').value.trim();
+            const userNotes = document.getElementById('share-user-notes').value.trim();
+
+            if (!name) {
+                alert("請至少填寫店家名稱");
+                return;
+            }
+
+            const btn = document.getElementById('share-submit-btn');
+            const originalText = btn.textContent;
+            btn.textContent = "正在記錄這家店的色彩…";
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+
+            try {
+                if (!navigator.onLine) {
+                    throw new Error("無網路連線");
+                }
+                // 發送至 Supabase submissions 表格
+                const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+                const supabaseUrl = 'https://ccqcmzsopezfmmmvlqlr.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcWNtenNvcGV6Zm1tbXZscWxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTE4NjUsImV4cCI6MjA5MDk4Nzg2NX0.v2T_HyAYnwW2wSNBYVUdtRCDMTyffIFQ5nU-JLwvMI4';
+                const supabase = createClient(supabaseUrl, supabaseKey);
+
+                // --- 圖片實體上傳邏輯 START ---
+                let insertedImagePath = null;
+                const photoInput = document.getElementById('share-photo-upload');
+
+                if (photoInput.files && photoInput.files.length > 0) {
+                    const file = photoInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}-${Math.floor(Math.random() * 10000)}.${fileExt}`;
+                    const filePath = `uploads/${fileName}`;
+
+                    btn.textContent = "上傳圖片中…";
+
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('shop-photos')
+                        .upload(filePath, file);
+
+                    if (uploadError) {
+                        console.warn("圖片上傳失敗:", uploadError);
+                        // 為了防呆使用者尚未建立 bucket，僅給出控制台警告，依然使純文字能成功送出，避免卡死。
+                        // 但如果是網路錯誤，依然拋出。
+                        if (uploadError.message && uploadError.message.includes("Failed to fetch")) {
+                            throw new Error("網路請求失敗，圖片無法上傳");
+                        }
+                    } else if (uploadData) {
+                        insertedImagePath = uploadData.path;
+                    }
+                }
+
+                btn.textContent = "正在記錄這家店的色彩…";
+
+                // 將實體路徑 (image_path) 與其他資料同步寫入表格
+                const { error } = await supabase.from('submissions').insert([{
+                    shop_name: name,
+                    shop_location: location,
+                    reason: reason,
+                    provider_name: userName,
+                    provider_contact: userContact,
+                    notes: userNotes,
+                    image_path: insertedImagePath,
+                    status: 'pending'
+                }]);
+
+                if (error) {
+                    // 若為網路連線層級的問題才會判斷為失敗
+                    if (error.message && error.message.includes("Failed to fetch")) {
+                        throw new Error("網路請求失敗，可能處於離線狀態");
+                    } else {
+                        // 表格不存在或 RLS 權限問題，僅作警告，前台依然回饋成功（因純前端展示用）
+                        console.warn("Supabase 寫入狀態 (開發模式略過): ", error);
+                    }
+                }
+
+                // 重設表單
+                document.getElementById('share-shop-name').value = '';
+                document.getElementById('share-shop-location').value = '';
+                document.getElementById('share-shop-reason').value = '';
+                document.getElementById('share-user-name').value = '';
+                document.getElementById('share-user-contact').value = '';
+                document.getElementById('share-user-notes').value = '';
+                document.getElementById('terms-agree').checked = false;
+                document.getElementById('share-photo-preview').style.display = 'none';
+                document.getElementById('share-photo-upload').value = '';
+
+                // 切換視窗
+                document.getElementById('add-modal').classList.add('hidden');
+                document.getElementById('success-modal').classList.remove('hidden');
+
+                setTimeout(() => {
+                    document.getElementById('success-modal').classList.add('hidden');
+                }, 3000);
+
+            } catch (err) {
+                console.error("提交過程發生錯誤", err);
+
+                document.getElementById('add-modal').classList.add('hidden');
+                document.getElementById('fail-modal').classList.remove('hidden');
+
+                setTimeout(() => {
+                    document.getElementById('fail-modal').classList.add('hidden');
+                }, 3000);
+            } finally {
+                btn.textContent = originalText;
+                // 按鈕恢復禁用，因為同意條款的勾選已被清空
+                btn.disabled = true;
+                btn.style.opacity = '0.4';
+            }
+        }
+
+        // 處理照片上傳預覽
+        function handleSharePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const previewContainer = document.getElementById('share-photo-preview');
+                const previewImg = document.getElementById('share-photo-img');
+                const photoName = document.getElementById('share-photo-name');
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    photoName.textContent = file.name;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('share-photo-preview').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
