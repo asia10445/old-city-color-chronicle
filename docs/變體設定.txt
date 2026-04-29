@@ -1,4 +1,4 @@
-﻿Variables
+Variables
 
 文字
 name "內文-12/18" Noto Sans TC Regular 字級12 行距18
@@ -14,8 +14,8 @@ name "標題-32/48" Noto Serif TC BOLD 字級32 行距48
 COLLECTIONS "原始語意"
  
 群組"色票"
-name "中興新村黑" 色碼1A1A1A
-name "中興新村黑-透明度50"  Value #1A1A1A 透明度50
+name "舊城黑" 色碼1A1A1A
+name "舊城黑-透明度50"  Value #1A1A1A 透明度50
 name "時光白" 色碼FFFFFF
 name "時光白-透明度50" Value #FFFFFF 透明度50
 
@@ -37,9 +37,9 @@ name "間距-150"  Value 150
 COLLECTIONS "命名語意"
 
 群組"顏色"
-name "文字"  Value 色票/中興新村黑 
-name "文字-提示輸入"  Value 色票/中興新村黑-透明度50
-name "ICON"  Value 色票/中興新村黑
+name "文字"  Value 色票/舊城黑 
+name "文字-提示輸入"  Value 色票/舊城黑-透明度50
+name "ICON"  Value 色票/舊城黑
 
 群組"間距"
 name "間距-色票標題"  Value 間距/間距-0
