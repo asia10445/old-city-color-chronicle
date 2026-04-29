@@ -1,4 +1,4 @@
-﻿# 中興新村省府生活色譜 (Living Color Atlas of Zhongxing New Village)
+# 舊城時光色譜 (Old Town Color Atlas)
 
 這是一個以手機瀏覽為考量的響應式網頁應用程式（Web App）。我們將採用 Vanilla HTML/CSS/JavaScript 進行實作，以保持專案結構的輕量與高彈性。全站依據 Figma 設計稿的美學，完整重現字型、間距與玻璃擬態 (Glassmorphism) 特效。
 
