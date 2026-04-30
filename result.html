@@ -228,6 +228,11 @@
             const img = document.getElementById('result-photo');
             if (!img.naturalWidth) return;
             const isLandscape = img.naturalWidth >= img.naturalHeight;
+            
+            // 強制設定照片長寬比為 4:3 或 3:4 並填滿，避免圖框變形
+            img.style.aspectRatio = isLandscape ? '4/3' : '3/4';
+            img.style.objectFit = 'cover';
+
             const frameUrl = isLandscape ? dynamicFrameLandscape : dynamicFramePortrait;
             
             const frameEl = document.getElementById('result-photo-frame');
@@ -308,13 +313,33 @@
         // 嘗試在 Canvas 上合成圖片，回傳 dataURL 或 null
         function tryComposite(img) {
             try {
+                const isLandscape = img.naturalWidth >= img.naturalHeight;
+                const targetRatio = isLandscape ? 4 / 3 : 3 / 4;
+                
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
+                
+                // 以較短的邊為基準，計算要裁切的範圍，確保輸出為 4:3 或 3:4
+                let sw = img.naturalWidth;
+                let sh = img.naturalHeight;
+                let sx = 0;
+                let sy = 0;
+                
+                if (sw / sh > targetRatio) {
+                    // 原圖太寬，裁切左右
+                    sw = sh * targetRatio;
+                    sx = (img.naturalWidth - sw) / 2;
+                } else {
+                    // 原圖太高，裁切上下
+                    sh = sw / targetRatio;
+                    sy = (img.naturalHeight - sh) / 2;
+                }
 
-                // 1. 繪製相片
-                ctx.drawImage(img, 0, 0);
+                canvas.width = sw;
+                canvas.height = sh;
+
+                // 1. 繪製相片 (置中裁切)
+                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
 
                 // 2. 繪製圖框
                 if (preloadedFrameImg && preloadedFrameImg.width > 0) {
