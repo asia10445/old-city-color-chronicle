@@ -117,6 +117,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.warn('Supabase SDK 載入或連線失敗', err);
         container.innerHTML = '<div class="body-16-24" style="padding: 32px 16px; color: #888; text-align: center;">資料載入失敗</div>';
+    } finally {
+        const loader = document.getElementById('global-loader');
+        if (loader) loader.style.display = 'none';
     }
 
     // 資訊彈窗邏輯

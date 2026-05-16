@@ -8,7 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="./assets/icons/app-logo.svg">
+    <link rel="icon" type="image/png" href="./assets/images/og-image.png">
 
     <!-- Open Graph Metadata -->
     <meta property="og:title" content="南投時光地圖 - 舊城時光色譜">
@@ -88,6 +88,14 @@
 </head>
 
 <body>
+    <!-- 全域載入畫面 -->
+    <div id="global-loader">
+        <div class="loader-card glass-effect">
+            <img src="./assets/images/og-image.png" alt="Loading">
+            <div class="loader-text">色譜讀取中</div>
+        </div>
+    </div>
+
     <div class="app-container" style="background: #FDFDFD;">
 
         <!-- 頂端玻璃標題 -->
@@ -290,6 +298,9 @@
         } catch (err) {
             console.warn('Supabase 載入失敗', err);
             container.innerHTML = '<div class="body-16-24" style="padding: 32px; text-align: center; color: #888;">地圖資料載入失敗</div>';
+        } finally {
+            const loader = document.getElementById('global-loader');
+            if (loader) loader.style.display = 'none';
         }
 
         // 搜尋器邏輯

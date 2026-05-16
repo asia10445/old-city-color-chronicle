@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="./assets/icons/app-logo.svg">
+    <link rel="icon" type="image/png" href="./assets/images/og-image.png">
 
     <!-- Open Graph Metadata -->
     <meta property="og:title" content="舊城時光色譜">
@@ -23,6 +23,14 @@
 </head>
 
 <body>
+    <!-- 全域載入畫面 -->
+    <div id="global-loader">
+        <div class="loader-card glass-effect">
+            <img src="./assets/images/og-image.png" alt="Loading">
+            <div class="loader-text">色譜讀取中</div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- 頂部 Header 導覽列也套用玻璃陰影 -->
         <header class="app-header glass-effect">
@@ -88,7 +96,7 @@
             <!-- 將面板擴充為滿版捲動區 -->
             <div class="modal-panel glass-effect full-modal-scroll">
                 <div class="share-form">
-                    <h2 class="form-main-title">分享一間你喜歡的台中舊城店家</h2>
+                    <h2 class="form-main-title">分享一間你喜歡的店家</h2>
 
                     <div class="body-12-18 form-subtitle">
                         <p style="font-weight: 700; margin-bottom: 8px;">我們正在蒐集那些值得被記住的地方</p>
@@ -105,6 +113,11 @@
                     <div class="form-group form-row">
                         <label>店家地點</label>
                         <input id="share-shop-location" type="text" placeholder="店家地點 例如：綠川附近">
+                    </div>
+
+                    <div class="form-group form-row">
+                        <label>店家地址</label>
+                        <input id="share-shop-address" type="text" placeholder="店家地址 例如：台中市中區中山路100號">
                     </div>
 
                     <div class="form-group">
@@ -216,6 +229,7 @@
 
             const name = document.getElementById('share-shop-name').value.trim();
             const location = document.getElementById('share-shop-location').value.trim();
+            const address = document.getElementById('share-shop-address').value.trim();
             const reason = document.getElementById('share-shop-reason').value.trim();
             const userName = document.getElementById('share-user-name').value.trim();
             const userContact = document.getElementById('share-user-contact').value.trim();
@@ -276,6 +290,7 @@
                 const { error } = await supabase.from('submissions').insert([{
                     shop_name: name,
                     shop_location: location,
+                    shop_address: address,
                     reason: reason,
                     provider_name: userName,
                     provider_contact: userContact,
@@ -297,6 +312,7 @@
                 // 重設表單
                 document.getElementById('share-shop-name').value = '';
                 document.getElementById('share-shop-location').value = '';
+                document.getElementById('share-shop-address').value = '';
                 document.getElementById('share-shop-reason').value = '';
                 document.getElementById('share-user-name').value = '';
                 document.getElementById('share-user-contact').value = '';

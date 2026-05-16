@@ -377,6 +377,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (err) {
         console.error("詳情頁載入發生錯誤：", err);
+    } finally {
+        const loader = document.getElementById('global-loader');
+        if (loader) loader.style.display = 'none';
     }
 
         // ==========================================

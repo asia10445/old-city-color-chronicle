@@ -31,6 +31,11 @@
     padding: 0;
 }
 
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: 'Noto Sans TC', sans-serif;
     background-color: #ECECEC;
@@ -40,7 +45,11 @@ body {
     justify-content: center;
     align-items: flex-start;
     /* 手機預設靠頂對齊，避免瀏覽器收合網址列時上方出現空白 */
-    min-height: 100vh;
+    min-height: 100dvh;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
     overscroll-behavior: none;
     /* 防止下拉時露出背景空白 */
 }
@@ -230,8 +239,8 @@ body {
     position: absolute;
     /* 掛靠在絕對畫布上 */
     top: 50%;
-    right: 16px;
-    /* 固定距離右邊 16px */
+    right: 40px;
+    /* 統一距離右邊 40px */
     /* 取消 translateY，讓按鈕群的 y 軸位置由正好 50% 處開始往下延伸 */
     display: flex;
     flex-direction: column;
@@ -325,8 +334,10 @@ body {
     position: sticky;
     top: 0;
     width: 100%;
-    height: var(--space-nav);
-    /* 150px */
+    height: var(--space-nav-home);
+    min-height: var(--space-nav-home);
+    flex-shrink: 0;
+    /* 與首頁同高 125px */
     padding: 0 20px;
     /* 變體 name "間距-邊框-20" Value 20 */
     display: flex;
@@ -352,7 +363,8 @@ body {
 
 .detail-floating-nav {
     position: absolute;
-    right: 20px;
+    right: 40px;
+    /* 統一距離右邊 40px */
     top: 50%;
     /* 位於 Hero 的中央垂直位置 */
     transform: translateY(-50%);
@@ -544,7 +556,7 @@ body {
 
 .modal-close-btn {
     position: absolute;
-    right: 20px;
+    right: 40px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 110;
@@ -651,4 +663,48 @@ body {
     cursor: pointer;
     background: rgba(255, 255, 255, 0.3);
     color: #111;
+}
+
+/* =========================================================================
+ * 全域載入畫面 (Global Loader)
+ * ========================================================================= */
+#global-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-time-white); /* 改回純白底，避免底層文字透出變成黑色模糊色塊 */
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#global-loader .loader-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 48px;
+    border-radius: var(--radius-15); /* 使用和浮動按鈕相同的圓角 */
+    /* 此處已透過 HTML 套用 .glass-effect，故不需重複寫陰影與模糊 */
+}
+
+#global-loader img {
+    width: 180px; /* 卡片內的圖片縮小一點，比例更好看 */
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.06));
+}
+
+#global-loader .loader-text {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+    letter-spacing: 0.25em;
+    padding-left: 0.25em; /* 修正 letter-spacing 造成的置中偏移 */
 }

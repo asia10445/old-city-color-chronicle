@@ -11,6 +11,7 @@ CREATE TABLE public.submissions (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null,
     shop_name text not null,
     shop_location text,
+    shop_address text,
     reason text,
     provider_name text,
     provider_contact text,
